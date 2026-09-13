@@ -198,14 +198,20 @@ taobai-zanhua
 
 同步原则：**分流逻辑、规则集、DNS 处理全部跟随上游**；仅策略组 / 地区命名保留桃白簪花卷名，四项增强（`sniffer`、`global-client-fingerprint`、30s 保活、「🌸 寻花」50ms 容差）保持不变。
 
-### 最近一次同步：`fefcb66` → `188ceec`（2 笔）
+### 最近一次同步：`001faf2` → `40f932d`（1 笔）
+
+| 提交 | 说明 | 桃白簪花落地 |
+| :--- | :--- | :--- |
+| `40f932d` | perf: 优化DNS配置 | ① `chinaDNS` 首位加入 `system`（系统 DNS 兜底），`direct-nameserver` 直接复用之；② `chinaDohDNS` 新增 `114.114.114.114` DoH；③ 公共 DNS 过滤清单新增 `dns.apple`、`one.one.one.one` 关键词，订阅节点里这类公共 DNS 节点过滤更干净 |
+
+### 上一次同步：`fefcb66` → `001faf2`（2 笔）
 
 | 提交 | 说明 | 桃白簪花落地 |
 | :--- | :--- | :--- |
 | `188ceec` | feat: add microsoft_ip、apple_ip | 「🪟 云笈·微软」「🍎 玉果·苹果」新增 GeoIP 规则集与 `no-resolve` 规则：域名与 IP 双覆盖，命中更彻底 |
 | `001faf2` | perf: 优化配置检查 | `main()` 入口新增校验：配置中若带 `proxy-providers` 直接报错并提示改用机场原始配置覆写，避免产出无效配置 |
 
-### 上一次同步：`35c646e` → `fefcb66`（4 笔）
+### 再上一次同步：`35c646e` → `fefcb66`（4 笔）
 
 | 提交 | 说明 | 桃白簪花落地 |
 | :--- | :--- | :--- |
@@ -251,7 +257,7 @@ taobai-zanhua
 
 **🌐 DNS 服务**
 
-- 阿里 DNS（`223.5.5.5`）· 腾讯 DNSPod（`119.29.29.29` / `1.12.12.12`）· [Cloudflare DNS](https://1.1.1.1) · [Google DNS](https://dns.google)
+- 阿里 DNS（`223.5.5.5`）· 腾讯 DNSPod（`119.29.29.29` / `1.12.12.12`）· [114DNS](https://www.114dns.cn)（`114.114.114.114` DoH）· [Cloudflare DNS](https://1.1.1.1) · [Google DNS](https://dns.google)
 
 <details>
 <summary>🔍 核对说明：本次调整了什么</summary>
