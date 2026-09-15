@@ -198,20 +198,27 @@ taobai-zanhua
 
 同步原则：**分流逻辑、规则集、DNS 处理全部跟随上游**；仅策略组 / 地区命名保留桃白簪花卷名，四项增强（`sniffer`、`global-client-fingerprint`、30s 保活、「🌸 寻花」50ms 容差）保持不变。
 
-### 最近一次同步：`001faf2` → `40f932d`（1 笔）
+### 最近一次同步：`40f932d` → `9c01b6e`（2 笔）
+
+| 提交 | 说明 | 桃白簪花落地 |
+| :--- | :--- | :--- |
+| `7444d83` | perf: 优化DNS配置 | ① 拆掉旧常量 `chinaDohDNS`，改为 `defaultDNS` / `proxyServerDNS` 两条独立列表，`default-nameserver`（启动引导）与 `proxy-server-nameserver`（解析节点域名）不再共用同一组上游；② 引导解析用 `114.114.114.114` 明文 + `tls://223.5.5.5` + `1.12.12.12` DoH，代理服务端解析用 `114.114.114.114` + `tls://223.5.5.5` + `doh.pub` DoH；③ `hosts` 补上 `doh.pub` 映射（`1.12.12.12` / `120.53.53.53`），省一次自举递归；④ `nameserver`（`🍑 桃印 \| 总卷`）与 `nameserver-policy` 保持原样 |
+| `9c01b6e` | feat: tun.stack 更换为 mips | TUN 栈由 `system` 换成 `mips`：纯用户态转发、不依赖系统内核栈，跨平台行为更一致，转发路径更短更省电 |
+
+### 上一次同步：`001faf2` → `40f932d`（1 笔）
 
 | 提交 | 说明 | 桃白簪花落地 |
 | :--- | :--- | :--- |
 | `40f932d` | perf: 优化DNS配置 | ① `chinaDNS` 首位加入 `system`（系统 DNS 兜底），`direct-nameserver` 直接复用之；② `chinaDohDNS` 新增 `114.114.114.114` DoH；③ 公共 DNS 过滤清单新增 `dns.apple`、`one.one.one.one` 关键词，订阅节点里这类公共 DNS 节点过滤更干净 |
 
-### 上一次同步：`fefcb66` → `001faf2`（2 笔）
+### 再上一次同步：`fefcb66` → `001faf2`（2 笔）
 
 | 提交 | 说明 | 桃白簪花落地 |
 | :--- | :--- | :--- |
 | `188ceec` | feat: add microsoft_ip、apple_ip | 「🪟 云笈·微软」「🍎 玉果·苹果」新增 GeoIP 规则集与 `no-resolve` 规则：域名与 IP 双覆盖，命中更彻底 |
 | `001faf2` | perf: 优化配置检查 | `main()` 入口新增校验：配置中若带 `proxy-providers` 直接报错并提示改用机场原始配置覆写，避免产出无效配置 |
 
-### 再上一次同步：`35c646e` → `fefcb66`（4 笔）
+### 更早一次同步：`35c646e` → `fefcb66`（4 笔）
 
 | 提交 | 说明 | 桃白簪花落地 |
 | :--- | :--- | :--- |
@@ -257,7 +264,7 @@ taobai-zanhua
 
 **🌐 DNS 服务**
 
-- 阿里 DNS（`223.5.5.5`）· 腾讯 DNSPod（`119.29.29.29` / `1.12.12.12`）· [114DNS](https://www.114dns.cn)（`114.114.114.114` DoH）· [Cloudflare DNS](https://1.1.1.1) · [Google DNS](https://dns.google)
+- 阿里 DNS（`223.5.5.5` 明文 / `tls://223.5.5.5`）· 腾讯 DNSPod（`119.29.29.29` / `1.12.12.12` DoH / [`doh.pub`](https://www.dnspod.cn/products/publicdns) DoH）· [114DNS](https://www.114dns.cn)（`114.114.114.114`）· [Cloudflare DNS](https://1.1.1.1) · [Google DNS](https://dns.google)
 
 <details>
 <summary>🔍 核对说明：本次调整了什么</summary>
@@ -269,6 +276,7 @@ taobai-zanhua
 | `wwqgtxx/clash-rules` | ➖ 移除 | 当前脚本已无任何引用（上游 `a87f98a` 移除了相关规则） |
 | `217heidai/AdBlockFilters` | ✏️ 更名 | 实际仓库名为小写 `217heidai/adblockfilters` |
 | DNS 服务商 | ➕ 新增 | 脚本默认 DNS 上游，此前未列 |
+| `doh.pub` | ➕ 新增 | 上游 `7444d83` 引入的腾讯 DoH，脚本已为其补 `hosts` 映射（`1.12.12.12` / `120.53.53.53`） |
 
 </details>
 
