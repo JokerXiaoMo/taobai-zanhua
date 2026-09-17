@@ -94,11 +94,12 @@
 | YouTube | **🎬 映画·油管** | | Steam | **🎮 雾阁·蒸汽** |
 | Google | **🗺️ 星图·谷歌** | | TikTok | **🎵 幻音·短影** |
 | 国外 AI | **🤖 天工·灵智** | | Twitter | **🕊️ 栖鸾·推特** |
-| Microsoft | **🪟 云笈·微软** | | Instagram | **📸 绘镜·影格** |
-| Apple | **🍎 玉果·苹果** | | Netflix | **🎞️ 映雪·奈飞** |
-| Emby | **📚 藏经阁·影库** | | PikPak | **🎒 行囊·网盘** |
-| Spotify | **🎧 韶音·声乐** | | 加密货币 | **🪙 通宝·加密** |
-| E-Hentai | **🔖 秘阁·E站** | | 广告拦截 | **🚫 掩扉 \| 拦截** |
+| Meta | **📘 墨册·脸书** | | Line | **💚 青笺·连线** |
+| Microsoft | **🪟 云笈·微软** | | Apple | **🍎 玉果·苹果** |
+| Netflix | **🎞️ 映雪·奈飞** | | Emby | **📚 藏经阁·影库** |
+| PikPak | **🎒 行囊·网盘** | | Spotify | **🎧 韶音·声乐** |
+| 加密货币 | **🪙 通宝·加密** | | E-Hentai | **🔖 秘阁·E站** |
+| 广告拦截 | **🚫 掩扉 \| 拦截** | | | |
 
 > `GLOBAL` 保持不变，以兼容面板全局模式。
 
@@ -198,27 +199,38 @@ taobai-zanhua
 
 同步原则：**分流逻辑、规则集、DNS 处理全部跟随上游**；仅策略组 / 地区命名保留桃白簪花卷名，四项增强（`sniffer`、`global-client-fingerprint`、30s 保活、「🌸 寻花」50ms 容差）保持不变。
 
-### 最近一次同步：`40f932d` → `9c01b6e`（2 笔）
+### 最近一次同步：`9c01b6e` → `9b9f2cc`（4 笔）
+
+| 提交 | 说明 | 桃白簪花落地 |
+| :--- | :--- | :--- |
+| `18e40e1` | feat: 新增 Meta、Line 策略组 | 「📸 绘镜·影格」升级为 **「📘 墨册·脸书」**：规则集由 `instagram` 换成 `meta`（`facebook` 域名集），并补一个 `facebook_ip`（ipcidr，带 `no-resolve`），域名 + IP 双覆盖；同时新增 **「💚 青笺·连线」**（`line` 域名集）。开关、组名、规则目标三处命名已一起改名，`ruleOptionsEnable` 键名同步，避免上游「改名键失配 → 静默失效」的老坑 |
+| `44ce58e` | perf: 优化DNS配置 | `chinaDNS` 去掉首位的 `'system'`，回到「阿里 + 腾讯」两个国内 DNS；`direct-nameserver` / `nameserver-policy['rule-set:cn']` 随之生效 |
+| `be02e39` | feat: EHentai 增加 `直连` 选项 #42 | 「🔖 秘阁·E站」加上 `direct: true`，成员表补入「🏠 归檐 \| 直连」，方便把 E 站直接走本地网络（默认仍指向「☁️ 羽 \| 花旗」） |
+| `9b9f2cc` | fix: dns | `defaultDNS` 第三条由 `https://1.12.12.12#DIRECT` 修正为 `https://1.12.12.12/dns-query#DIRECT` —— 补上 DoH 路径，此前会被当成普通 443 请求 |
+
+> 本轮 `mihomoScript.js` 净增量 `+32 -10`，与上游 diff 逐行一致。上游同批次还改了 `Config/*.yaml`、`Image/*` 与它自己的 README，本仓库不提供这些文件，故未同步。
+
+### 上一次同步：`40f932d` → `9c01b6e`（2 笔）
 
 | 提交 | 说明 | 桃白簪花落地 |
 | :--- | :--- | :--- |
 | `7444d83` | perf: 优化DNS配置 | ① 拆掉旧常量 `chinaDohDNS`，改为 `defaultDNS` / `proxyServerDNS` 两条独立列表，`default-nameserver`（启动引导）与 `proxy-server-nameserver`（解析节点域名）不再共用同一组上游；② 引导解析用 `114.114.114.114` 明文 + `tls://223.5.5.5` + `1.12.12.12` DoH，代理服务端解析用 `114.114.114.114` + `tls://223.5.5.5` + `doh.pub` DoH；③ `hosts` 补上 `doh.pub` 映射（`1.12.12.12` / `120.53.53.53`），省一次自举递归；④ `nameserver`（`🍑 桃印 \| 总卷`）与 `nameserver-policy` 保持原样 |
 | `9c01b6e` | feat: tun.stack 更换为 mips | TUN 栈由 `system` 换成 `mips`：纯用户态转发、不依赖系统内核栈，跨平台行为更一致，转发路径更短更省电 |
 
-### 上一次同步：`001faf2` → `40f932d`（1 笔）
+### 再上一次同步：`001faf2` → `40f932d`（1 笔）
 
 | 提交 | 说明 | 桃白簪花落地 |
 | :--- | :--- | :--- |
 | `40f932d` | perf: 优化DNS配置 | ① `chinaDNS` 首位加入 `system`（系统 DNS 兜底），`direct-nameserver` 直接复用之；② `chinaDohDNS` 新增 `114.114.114.114` DoH；③ 公共 DNS 过滤清单新增 `dns.apple`、`one.one.one.one` 关键词，订阅节点里这类公共 DNS 节点过滤更干净 |
 
-### 再上一次同步：`fefcb66` → `001faf2`（2 笔）
+### 更早一次同步：`fefcb66` → `001faf2`（2 笔）
 
 | 提交 | 说明 | 桃白簪花落地 |
 | :--- | :--- | :--- |
 | `188ceec` | feat: add microsoft_ip、apple_ip | 「🪟 云笈·微软」「🍎 玉果·苹果」新增 GeoIP 规则集与 `no-resolve` 规则：域名与 IP 双覆盖，命中更彻底 |
 | `001faf2` | perf: 优化配置检查 | `main()` 入口新增校验：配置中若带 `proxy-providers` 直接报错并提示改用机场原始配置覆写，避免产出无效配置 |
 
-### 更早一次同步：`35c646e` → `fefcb66`（4 笔）
+### 最早一次同步：`35c646e` → `fefcb66`（4 笔）
 
 | 提交 | 说明 | 桃白簪花落地 |
 | :--- | :--- | :--- |
@@ -246,7 +258,7 @@ taobai-zanhua
 
 **📜 规则集**
 
-- [appshubcc/bett-rules](https://github.com/appshubcc/bett-rules) —— **主要规则集来源**（引用 36 处）
+- [appshubcc/bett-rules](https://github.com/appshubcc/bett-rules) —— **主要规则集来源**（引用 40 处）
 - [666OS/rules](https://github.com/666OS/rules) —— Emby 域名规则（1 处）
 - [binaryu/emos-proxy-rule](https://github.com/binaryu/emos-proxy-rule) —— Emby 规则补充（1 处）
 - [217heidai/adblockfilters](https://github.com/217heidai/adblockfilters) —— 广告过滤规则（1 处）
@@ -256,7 +268,7 @@ taobai-zanhua
 
 - [Koolson/Qure](https://github.com/Koolson/Qure) —— **主要图标来源**（引用 34 处）
 - [MiToverG422/Qure](https://github.com/MiToverG422/Qure) —— 补充 FCM 图标（1 处）
-- [lige47/QuanX-icon-rule](https://github.com/lige47/QuanX-icon-rule) —— 补充 PikPak / 加密货币 / E-Hentai 图标（3 处）
+- [lige47/QuanX-icon-rule](https://github.com/lige47/QuanX-icon-rule) —— 补充 Meta / PikPak / 加密货币 / E-Hentai 图标（4 处）
 
 **🖥 面板**
 
@@ -271,7 +283,7 @@ taobai-zanhua
 
 | 项目 | 动作 | 原因 |
 | :--- | :--- | :--- |
-| `lige47/QuanX-icon-rule` | ➕ 新增 | 脚本实际引用 3 处图标，此前遗漏 |
+| `lige47/QuanX-icon-rule` | ➕ 新增 | 脚本实际引用 4 处图标，此前遗漏 |
 | `MiToverG422/Qure` | ➕ 新增 | 脚本实际引用 1 处 FCM 图标，此前遗漏 |
 | `wwqgtxx/clash-rules` | ➖ 移除 | 当前脚本已无任何引用（上游 `a87f98a` 移除了相关规则） |
 | `217heidai/AdBlockFilters` | ✏️ 更名 | 实际仓库名为小写 `217heidai/adblockfilters` |

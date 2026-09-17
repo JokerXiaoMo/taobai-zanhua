@@ -35,7 +35,7 @@
  * 【卷四 · 分卷】十余项服务各归其卷
  *   💬 灵鸽·传讯　🎬 映画·油管　🗺️ 星图·谷歌　🤖 天工·灵智
  *   🪟 云笈·微软　🍎 玉果·苹果　✈️ 飞书·电报　🎮 雾阁·蒸汽
- *   🎵 幻音·短影　🕊️ 栖鸾·推特　📸 绘镜·影格　🎞️ 映雪·奈飞
+ *   🎵 幻音·短影　🕊️ 栖鸾·推特　📘 墨册·脸书　💚 青笺·连线　🎞️ 映雪·奈飞
  *   📚 藏经阁·影库　🎒 行囊·网盘　🎧 韶音·声乐　🪙 通宝·加密
  *   🔖 秘阁·E站　🚫 掩扉 | 拦截
  *
@@ -49,7 +49,7 @@
  *   自建节点→🪶 本命·自建　链式中转→🌉 合道·中转　链式落地→🌉 合道·落地
  *   FCM→💬 灵鸽·传讯　YouTube→🎬 映画·油管　Google→🗺️ 星图·谷歌　AI→🤖 天工·灵智
  *   Microsoft→🪟 云笈·微软　Apple→🍎 玉果·苹果　Telegram→✈️ 飞书·电报　Steam→🎮 雾阁·蒸汽
- *   TikTok→🎵 幻音·短影　Twitter→🕊️ 栖鸾·推特　Instagram→📸 绘镜·影格　Netflix→🎞️ 映雪·奈飞
+ *   TikTok→🎵 幻音·短影　Twitter→🕊️ 栖鸾·推特　Meta→📘 墨册·脸书　Line→💚 青笺·连线　Netflix→🎞️ 映雪·奈飞
  *   Emby→📚 藏经阁·影库　PikPak→🎒 行囊·网盘　Spotify→🎧 韶音·声乐　Crypto→🪙 通宝·加密
  *   EHentai→🔖 秘阁·E站　AdBlock→🚫 掩扉 | 拦截
  *
@@ -84,7 +84,8 @@ const ruleOptionsEnable = {
   '🎮 雾阁·蒸汽': true, // Steam 游戏（🎮 雾阁·蒸汽）
   '🎵 幻音·短影': true, // TikTok 短视频（🎵 幻音·短影）
   '🕊️ 栖鸾·推特': true, // Twitter 社交（🕊️ 栖鸾·推特）
-  '📸 绘镜·影格': true, // Instagram 社交（📸 绘镜·影格）
+  '📘 墨册·脸书': true, // Meta 服务（📘 墨册·脸书）
+  '💚 青笺·连线': true, // Line 通讯（💚 青笺·连线）
   '🎞️ 映雪·奈飞': true, // Netflix 影视（🎞️ 映雪·奈飞）
   '📚 藏经阁·影库': true, // Emby 媒体库（📚 藏经阁·影库）
   '🎒 行囊·网盘': true, // PikPak 网盘（🎒 行囊·网盘）
@@ -610,18 +611,38 @@ const serviceConfigs = [
     rules: ['RULE-SET,twitter,🕊️ 栖鸾·推特', 'RULE-SET,twitter_ip,🕊️ 栖鸾·推特,no-resolve'],
   },
   {
-    name: '📸 绘镜·影格',
+    name: '📘 墨册·脸书',
     baseOption: selectBaseOption,
     providers: {
-      instagram: {
+      meta: {
         ...ruleProviderCommonDomain,
-        url: 'https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/instagram.mrs',
-        path: './ruleset/instagram.mrs',
-        'path-in-bundle': 'geo/geosite/instagram.mrs',
+        url: 'https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/meta.mrs',
+        path: './ruleset/meta.mrs',
+        'path-in-bundle': 'geo/geosite/meta.mrs',
+      },
+      facebook_ip: {
+        ...ruleProviderCommonIpcidr,
+        url: 'https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geoip/facebook.mrs',
+        path: './ruleset/facebook_ip.mrs',
+        'path-in-bundle': 'geo/geoip/facebook.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Instagram.png',
-    rules: ['RULE-SET,instagram,📸 绘镜·影格'],
+    icon: 'https://fastly.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/04ProxySoft/meta.png',
+    rules: ['RULE-SET,meta,📘 墨册·脸书', 'RULE-SET,facebook_ip,📘 墨册·脸书,no-resolve'],
+  },
+  {
+    name: '💚 青笺·连线',
+    baseOption: selectBaseOption,
+    providers: {
+      line: {
+        ...ruleProviderCommonDomain,
+        url: 'https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/line.mrs',
+        path: './ruleset/line.mrs',
+        'path-in-bundle': 'geo/geosite/line.mrs',
+      },
+    },
+    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Line.png',
+    rules: ['RULE-SET,line,💚 青笺·连线'],
   },
   {
     name: '🎞️ 映雪·奈飞',
@@ -731,6 +752,7 @@ const serviceConfigs = [
   {
     name: '🔖 秘阁·E站',
     baseOption: selectBaseOption,
+    direct: true,
     defaultSelected: '☁️ 羽 | 花旗',
     providers: {
       ehentai: {
@@ -1239,9 +1261,9 @@ const commonDnsRegex = new RegExp(
 );
 
 // 国内外 DNS 定义
-const chinaDNS = ['system', '223.5.5.5#DIRECT', '119.29.29.29#DIRECT'];
+const chinaDNS = ['223.5.5.5#DIRECT', '119.29.29.29#DIRECT'];
 const foreignDNS = ['https://cloudflare-dns.com/dns-query#🍑 桃印 | 总卷', 'https://dns.google/dns-query#🍑 桃印 | 总卷'];
-const defaultDNS = ['114.114.114.114#DIRECT', 'tls://223.5.5.5#DIRECT', 'https://1.12.12.12#DIRECT'];
+const defaultDNS = ['114.114.114.114#DIRECT', 'tls://223.5.5.5#DIRECT', 'https://1.12.12.12/dns-query#DIRECT'];
 const proxyServerDNS = ['114.114.114.114#DIRECT', 'tls://223.5.5.5#DIRECT', 'https://doh.pub/dns-query#DIRECT'];
 
 /**
