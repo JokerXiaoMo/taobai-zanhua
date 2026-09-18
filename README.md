@@ -44,6 +44,22 @@
 | 3 | **`keep-alive-interval` 30s + `tcp-keep-alive-idle` 30s** | 空闲保活，NAT 映射不易失效，减少重连与延迟抖动 |
 | 4 | **「🌸 寻花」自动组 · 50ms 容差 url-test** | 实时测速、始终自动切换最低延迟线路 |
 
+## 🌬️ 御风栈 · mips 深度优化（2026-09 原创组合）
+
+`stack: mips` 用的是 mihomo 自研的**纯 Go 用户态 IP 栈（mipstack）**——字节级 DRR 出站调度，短 UDP/ICMP 不会被 TCP 大包堵在队尾。「御风栈」在此之上再做三式一泉，全部围绕**「让用户态栈每包更值、进栈流量更少」**：
+
+| 式 | 内容 | 效果 | 开关（默认） |
+| :-: | :--- | :--- | :--- |
+| **御风之本** | `stack: mips` | mihomo 自研栈（约 v1.19.31+）；老内核 TUN 起不来时关闭即回退官方推荐的 `mixed` | `御风栈启用mips`（开） |
+| **一式·整运** | `mtu: 9000` + `gso` 64K | 大件整运：包越大，每字节穿越用户态栈的固定开销越低（GSO 仅 Linux 系内核生效，Windows 自动忽略）—— **原创** | `御风栈整运`（开） |
+| **二式·让路** | `route-exclude-address` 7 段 + `disable-icmp-forwarding` | 家门之内不入栈：私网 / 链路本地 / 组播直接绕行（`/1` 全局路由默认会把它们扫进栈），局域网互访不排队；ICMP 本地即答 —— 路由绕行**原创**，ICMP 参考 echs-top/proxy | `御风栈让路`（开） |
+| **三式·纳新** | `endpoint-independent-nat`（EIM 全锥 NAT） | 游戏 / 语音 / WebRTC 的 P2P 穿透更顺（官方注明性能略降、非必要不启）—— 参考 echs-top/proxy 并开关化 | `御风栈纳新`（关） |
+| **净泉·真假分明** | `fake-ip-filter-mode: rule` | 直连域名取**真水**（real-ip：真实解析、TTL 正常、CDN 就近），其余域名皆**镜花**（fake-ip：秒回、免污染）；订阅自带的 fake-ip-filter 条目自动转换为规则语法 —— 思路参考 echs-top/proxy，规则集映射与转换器**原创** | `净泉真假分明`（开） |
+
+另有常备 `udp-timeout: 600`：UDP 会话保鲜 10 分钟（默认 300s），QUIC / 语音长会话不易断流。
+
+> 净泉引用的规则集全部为 `domain` 行为（`private / fakeip_filter / geolocation-cn / cn / games_cn / epicgames / nvidia_cn / apple_cn / microsoft_cn`，灵鸽·传讯开启时再加 `googlefcm`），与内核 rule 模式要求一致；关掉开关即回退旧黑名单写法，兼容老内核。
+
 此外完整继承了原脚本的招牌能力：
 
 - 🔄 根据节点名称**动态生成地区策略组**（自动补全国旗、剔除信息节点）
@@ -156,6 +172,9 @@ https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/taobai-z
 | `屏蔽国外QUIC` | 屏蔽国外 UDP 443（QUIC），配合 sniffer 自动回落 TCP |
 | `代理IPV4优先` / `代理IPV6优先` | 节点 IP 栈偏好（二者只开一个） |
 | `链式代理` | 自定义节点作为落地，经「🌉 合道·中转」中转 |
+| `御风栈启用mips` | 🌬️ 御风之本：TUN 用 mips 栈；关闭回退 `mixed`（老内核兜底） |
+| `御风栈整运` / `御风栈让路` / `御风栈纳新` | 🌬️ 御风三式（MTU+GSO / 私网不过栈 / EIM 全锥），详见上文 |
+| `净泉真假分明` | fake-ip 规则化：直连域名 real-ip、其余 fake-ip；关闭回退旧写法 |
 | 各分流组（`🎬 映画·油管` 等） | 关闭后该策略组与对应规则整体移除 |
 
 ---
@@ -255,6 +274,10 @@ taobai-zanhua
 
 - [MetaCubeX/mihomo](https://github.com/MetaCubeX/mihomo) —— 强大的代理内核
 - [appshubcc/Bettbox](https://github.com/appshubcc/Bettbox) —— 好用、省电且内存占用低的代理软件（友情推荐，脚本原生适配其图形化配置）
+
+**🌬️ 思路参考**
+
+- [echs-top/proxy](https://github.com/echs-top/proxy) —— 「御风栈」部分手法（UDP 保鲜 600s、ICMP 本地即答、EIM 全锥、fake-ip 规则化）的灵感来源；其规则化 DNS 分流的思路值得一看。御风栈的 MTU/GSO 整运、私网路由绕行、开关化与订阅条目转换器为本项目原创
 
 **📜 规则集**
 

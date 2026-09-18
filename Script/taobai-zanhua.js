@@ -12,6 +12,14 @@
  *     2) global-client-fingerprint=chrome：统一 TLS 指纹，降低 CDN 风控拦截概率
  *     3) keep-alive-interval 30s + tcp-keep-alive-idle 30s：空闲保活，减少重连与延迟抖动
  *     4) 自动组「🌸 寻花」以 50ms 容差 url-test 实时测速，始终走花瓣最轻的落处
+ *   · 2026-09「🌬️ 御风栈」：对 mihomo 自研 mips 栈（纯 Go 用户态 IP 栈，字节级 DRR 调度）的深度优化组合
+ *     御风之本：stack=mips 开关化，老内核可一键回退 mixed
+ *     一式·整运：MTU 9000 + GSO 64K 大件整运，摊薄用户态栈每包开销（GSO 仅 Linux 系生效）—— 原创
+ *     二式·让路：私网/链路本地/组播不进 TUN 栈，ICMP 本地即答 —— 路由绕行为原创，ICMP 参考 echs-top/proxy
+ *     三式·纳新：全锥 NAT（EIM）按开关启用，游戏/语音 P2P 穿透更顺 —— 参考 echs-top/proxy 并开关化
+ *       （另有常备 UDP 会话保鲜 udp-timeout=600，默认 300s 易断流，同参考 echs-top/proxy）
+ *     净泉·真假分明：fake-ip 规则化——直连域名取真水（real-ip 真实解析、CDN 就近），余者皆镜花（fake-ip 秒回）
+ *       —— 思路参考 echs-top/proxy，规则集映射与订阅条目自动转换为原创
  *
  * ── 命名体系 ──
  *
@@ -106,6 +114,13 @@ const ruleOptionsEnable = {
   代理IPV4优先: false, // 是否将订阅节点统一为 IPv4 优先（与“代理IPV6优先”同时开启时不生效）
   代理IPV6优先: false, // 是否将订阅节点统一为 IPv6 优先（与“代理IPV4优先”同时开启时不生效）
   链式代理: false, // 是否启用链式代理（自定义节点作为落地节点，经「🌉 合道·中转」策略组中转）
+
+  // 以下为 TUN「🌬️ 御风栈」mips 深度优化（2026-09 原创组合；udp-timeout/EIM/ICMP/fake-ip 规则化四式参考 echs-top/proxy）
+  御风栈启用mips: true, // 御风之本：TUN 用 mihomo 自研 mips 栈；需较新内核（约 v1.19.31+），老内核 TUN 起不来时关闭回退 mixed
+  御风栈整运: true, // 一式·整运：MTU 9000 + GSO 64K，大件整运摊薄每包开销（GSO 仅 Linux 系内核生效，Windows 自动忽略；如遇异常可关）
+  御风栈让路: true, // 二式·让路：私网/链路本地/组播不进 TUN 栈（局域网互访更快、栈更轻），ICMP 本地即答
+  御风栈纳新: false, // 三式·纳新：UDP 全锥 NAT（EIM），游戏/语音 P2P 穿透更顺；官方注明性能略降，非必要不启
+  净泉真假分明: true, // 净泉：fake-ip 规则化——直连域名取真水（real-ip），代理域名皆镜花（fake-ip）；如遇老内核不识别可关
 };
 
 // 定义前置规则
@@ -1439,6 +1454,23 @@ function simplifyDomainPolicy(policy) {
 }
 
 /**
+ * 净泉·真假分明辅助：把订阅自带的 fake-ip-filter 旧黑名单条目，转换为规则模式的 real-ip 条目。
+ * 旧语法只含域名模式；rule-set:/geosite: 引用的是订阅自己的规则集，在本配置中并不存在，须丢弃防悬空。
+ */
+function fakeIpPatternToRule(pattern) {
+  if (pattern == null) return null;
+  const p = String(pattern).trim().toLowerCase();
+  if (!p) return null;
+  if (p.startsWith('rule-set:') || p.startsWith('geosite:')) return null;
+  if (p.startsWith('+.') || p.startsWith('*.')) {
+    const suffix = p.slice(2);
+    return suffix ? 'DOMAIN-SUFFIX,' + suffix + ',real-ip' : null;
+  }
+  if (p.includes('*')) return null; // 中段通配无对应规则类型，丢弃
+  return 'DOMAIN,' + p + ',real-ip';
+}
+
+/**
  * 构建 DNS 与 hosts：保留私有 DNS、节点域名 policy/fake-ip-filter，并按 hosts 改写节点 server
  * hosts改写条件（满足任意一个条件即可）：
  * 1. proxy-server-nameserver 有且仅有一个 DNS 并且该 DNS 包含非空的 listen 值
@@ -1516,6 +1548,35 @@ function buildDnsAndHostsConfig(config, filteredProxies) {
     return matchDomainPattern(p, proxyDomains);
   });
 
+  // 🌬️ 净泉 · 真假分明：fake-ip 规则化（fake-ip-filter-mode: rule）
+  // 直连域名取真水（real-ip：真实解析、TTL 正常、CDN 就近），其余域名皆镜花（fake-ip：秒回、免 DNS 污染）
+  const fakeIpRuleMode = {
+    'fake-ip-filter-mode': 'rule',
+    'fake-ip-filter': [
+      'RULE-SET,private,real-ip',
+      'RULE-SET,fakeip_filter,real-ip',
+      'RULE-SET,geolocation-cn,real-ip',
+      'RULE-SET,cn,real-ip',
+      'RULE-SET,games_cn,real-ip',
+      'RULE-SET,epicgames,real-ip',
+      'RULE-SET,nvidia_cn,real-ip',
+      'RULE-SET,apple_cn,real-ip',
+      'RULE-SET,microsoft_cn,real-ip',
+      ...(ruleOptionsEnable['💬 灵鸽·传讯'] ? ['RULE-SET,googlefcm,real-ip'] : []),
+      ...[...new Set(proxyFakeIpFilter.map(fakeIpPatternToRule).filter(Boolean))],
+      'MATCH,fake-ip',
+    ],
+  };
+  const fakeIpLegacyMode = {
+    'fake-ip-filter': [
+      'rule-set:private',
+      'rule-set:fakeip_filter',
+      'rule-set:geolocation-cn',
+      ...(ruleOptionsEnable['💬 灵鸽·传讯'] ? ['rule-set:googlefcm'] : []),
+      ...proxyFakeIpFilter,
+    ],
+  };
+
   const dns = {
     enable: true,
     ipv6: true,
@@ -1525,13 +1586,7 @@ function buildDnsAndHostsConfig(config, filteredProxies) {
     'enhanced-mode': 'fake-ip',
     'fake-ip-range': '198.18.0.1/15',
     'fake-ip-range6': '2001:2::1/48',
-    'fake-ip-filter': [
-      'rule-set:private',
-      'rule-set:fakeip_filter',
-      'rule-set:geolocation-cn',
-      ...(ruleOptionsEnable['💬 灵鸽·传讯'] ? ['rule-set:googlefcm'] : []),
-      ...proxyFakeIpFilter,
-    ],
+    ...(ruleOptionsEnable.净泉真假分明 ? fakeIpRuleMode : fakeIpLegacyMode),
     'default-nameserver': defaultDNS,
     'proxy-server-nameserver': proxyServerDNS,
     ...(Object.keys(proxyServerPolicy).length > 0 && {
@@ -1616,14 +1671,44 @@ function main(config) {
     interval: 60,
   };
 
+  // 🌬️ 御风栈 · mips 深度优化（2026-09 原创）
+  // mips = mihomo 自研纯 Go 用户态 IP 栈（mipstack）：字节级 DRR 出站调度，短 UDP/ICMP 不被 TCP 大包堵。
+  // 御风三式皆围绕「让用户态栈每包更值、进栈流量更少」展开：
   newConfig['tun'] = {
     enable: true,
-    stack: 'mips',
+    // 御风之本：mips 为 mihomo 自研栈（约 v1.19.31+ 才有）；老内核不识会致 TUN 启动失败，关开关即回退官方推荐的 mixed
+    stack: ruleOptionsEnable.御风栈启用mips ? 'mips' : 'mixed',
     'auto-route': true,
     'strict-route': true,
     'auto-redirect': true,
     'auto-detect-interface': true,
     'dns-hijack': ['any:53', 'tcp://any:53'],
+    'udp-timeout': 600, // UDP 会话保鲜 10 分钟（默认 300s），QUIC/语音长会话不易断流
+    // 一式·整运：MTU 9000 + GSO 64K 大件整运——包越大、每字节穿越用户态栈的固定开销越低
+    // （GSO 仅 Linux 系内核生效，Windows/macOS 下 mihomo 自动忽略；MTU 若遇个别 APP 异常可关闭本式）
+    ...(ruleOptionsEnable.御风栈整运
+      ? { mtu: 9000, gso: true, 'gso-max-size': 65536 }
+      : {}),
+    // 二式·让路：家门之内不入栈——私网/链路本地/组播直接绕行（/1 全局路由默认会把它们扫进栈），
+    // 局域网互访（NAS/投屏/打印机/mDNS）不排队；ICMP 由栈本地即答，不再转发占位
+    // （disable-icmp-forwarding 为较新字段，旧内核静默忽略、不报错）
+    ...(ruleOptionsEnable.御风栈让路
+      ? {
+          'route-exclude-address': [
+            '10.0.0.0/8', // 私网 A 类（落在 0.0.0.0/1 内，默认会进栈）
+            '172.16.0.0/12', // 私网 B 类（落在 128.0.0.0/1 内）
+            '192.168.0.0/16', // 私网 C 类（落在 128.0.0.0/1 内）
+            '169.254.0.0/16', // 链路本地
+            '224.0.0.0/4', // IPv4 组播（mDNS/SSDP 等局域网发现）
+            'fc00::/7', // IPv6 ULA 私网
+            'ff00::/8', // IPv6 组播
+          ],
+          'disable-icmp-forwarding': true,
+        }
+      : {}),
+    // 三式·纳新：UDP 全锥 NAT（EIM）——WebRTC/游戏/语音 P2P 穿透成功率提升
+    // （官方注明性能略降、非必要不启，故默认关，按需打开开关）
+    ...(ruleOptionsEnable.御风栈纳新 ? { 'endpoint-independent-nat': true } : {}),
   };
 
   // 🏮 桃白簪花增强：TLS/HTTP 域名嗅探，各 APP 分流更精准；QUIC 被拦自动回落 TCP，视频/语音不断流
