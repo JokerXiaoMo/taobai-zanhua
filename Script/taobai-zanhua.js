@@ -20,6 +20,8 @@
  *       （另有常备 UDP 会话保鲜 udp-timeout=600，默认 300s 易断流，同参考 echs-top/proxy）
  *     净泉·真假分明：fake-ip 规则化——直连域名取真水（real-ip 真实解析、CDN 就近），余者皆镜花（fake-ip 秒回）
  *       —— 思路参考 echs-top/proxy，规则集映射与订阅条目自动转换为原创
+ *     断流闸：国外 QUIC 做成看得见的策略组「🌬️ 御风 | 断流」（REJECT 拦截 / PASS-RULE 放行 / 🏠 归檐直连三档），
+ *       「屏蔽国外QUIC」开关只定初始默认档；sniffer 补 QUIC 端口嗅探，放行档也能按域名分流
  *
  * ── 命名体系 ──
  *
@@ -29,10 +31,11 @@
  *   🌸 寻花 | 自动      循花瓣最轻的落处，自动择路
  *   🍃 分花 | 均衡      分花同承，负荷不偏倚
  *
- * 【卷二 · 行止】三条去路
+ * 【卷二 · 行止】三条去路 + 一道闸
  *   🏠 归檐 | 直连      乡音不远行，家门之内直去直回
  *   🚫 掩扉 | 拦截      帘外不迎，广告与骚扰止于门前
  *   🌙 拾遗 | 兜底      漏尽处皆有所归，未有遗落
+ *   🌬️ 御风 | 断流      QUIC 急流一道闸，或截或放一目了然（御风栈唯一可见组，紧跟总卷）
  *
  * 【卷三 · 山河】五灵守卷，各镇一方
  *   🏮 灯 | 香江　📜 卷 | 宝岛　🖌️ 砚 | 东瀛
@@ -110,7 +113,7 @@ const ruleOptionsEnable = {
   过滤低倍率节点: false, // 是否过滤低倍率节点
   过滤高倍率节点: false, // 是否过滤高倍率节点
   过滤非地区节点: true, // 是否过滤非地区节点
-  屏蔽国外QUIC: true, // 是否屏蔽国外QUIC流量
+  屏蔽国外QUIC: true, // 国外 QUIC 断流闸「🌬️ 御风 | 断流」的初始默认档：true=REJECT 拦截（配合嗅探回落 TCP），false=PASS-RULE 放行；面板里可随时切档
   代理IPV4优先: false, // 是否将订阅节点统一为 IPv4 优先（与“代理IPV6优先”同时开启时不生效）
   代理IPV6优先: false, // 是否将订阅节点统一为 IPv6 优先（与“代理IPV4优先”同时开启时不生效）
   链式代理: false, // 是否启用链式代理（自定义节点作为落地节点，经「🌉 合道·中转」策略组中转）
@@ -169,9 +172,9 @@ const dialerProxyName = '🌉 合道·中转';
 const excludeFilter =
   /群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|电报|无法|说明|使用|提示|访问|支持|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|选择|剩余|公益|发布|DIZTNA|通路|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|以下|过滤|⚠️|@|t\.me\/\+|\bexpire\b|\bhttps?:\/\/|\.com|\btraffic\b/iu;
 
-// 屏蔽国外QUIC
-const blockForeignQuic = [
-  'AND,((NETWORK,UDP),(DST-PORT,443),(NOT,((OR,((RULE-SET,cn_additional),(RULE-SET,cn_ip,no-resolve)))))),REJECT',
+// 国外 QUIC 断流闸：目标指向可见策略组「🌬️ 御风 | 断流」（御风栈中唯一路由可控的件，面板可实时切档）
+const foreignQuicGateRules = [
+  'AND,((NETWORK,UDP),(DST-PORT,443),(NOT,((OR,((RULE-SET,cn_additional),(RULE-SET,cn_ip,no-resolve)))))),🌬️ 御风 | 断流',
 ];
 
 // 归檐·直连节点
@@ -1077,11 +1080,8 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
 
   const functionalGroups = [];
   const functionalRules = [];
+  // cn_additional 是断流闸规则的引用集：现在无论「屏蔽国外QUIC」开关如何都常驻（档位交给「🌬️ 御风 | 断流」组决定）
   const finalRuleProviders = { ...baseRuleProviders };
-
-  if (!blockForeignQuicEnabled) {
-    delete finalRuleProviders.cn_additional;
-  }
 
   const { customProxyNames = [], customGroup = null } = customizeInfo || {};
   const filteredProxyNames = filteredProxies.map((p) => p.name);
@@ -1095,6 +1095,18 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
     name: '🍑 桃印 | 总卷',
     proxies: [...groupNamesOfSelect, ...baseGroupNames, ...customGroupNames],
     icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Proxy.png',
+  });
+
+  // 🌬️ 御风 | 断流：国外 QUIC 断流闸——御风栈里唯一路由可控的件，做成看得见的组，紧跟总卷
+  // 档位：REJECT 拦截（QUIC 被掐，配合嗅探回落 TCP）/ PASS-RULE 放行（交给后续规则正常分流）/ 🏠 归檐 | 直连（QUIC 直连）
+  // 「屏蔽国外QUIC」开关只决定初始默认档，store-selected 会记住之后在面板里的选择
+  functionalGroups.push({
+    ...selectBaseOption,
+    name: '🌬️ 御风 | 断流',
+    proxies: blockForeignQuicEnabled
+      ? ['REJECT', 'PASS-RULE', '🏠 归檐 | 直连']
+      : ['PASS-RULE', 'REJECT', '🏠 归檐 | 直连'],
+    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Reject.png',
   });
 
   const orderedServiceConfigs = [
@@ -1173,7 +1185,8 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
     ...selectBaseOption,
     name: 'GLOBAL',
     proxies: [
-      ...functionalGroups.map((g) => g.name),
+      // 「🌬️ 御风 | 断流」只是断流闸规则的目标组，不是通用出口——GLOBAL 模式下误选会全网中断，必须排除
+      ...functionalGroups.filter((g) => g.name !== '🌬️ 御风 | 断流').map((g) => g.name),
       ...(chainGroup ? [chainGroup.name] : []),
       directGroup.name,
       ...generatedRegionGroups.map((g) => g.name),
@@ -1718,6 +1731,7 @@ function main(config) {
     sniff: {
       TLS: { ports: [443] },
       HTTP: { ports: [80, 8080, 8880] },
+      QUIC: { ports: [443, 8443] }, // 断流闸放行档时，QUIC 也能按域名精准分流（参考 echs-top/proxy）
     },
     'skip-domain': ['+.push.apple.com', 'Mijia Cloud', 'dlg.io.mi.com'],
   };
@@ -1734,7 +1748,8 @@ function main(config) {
 
   newConfig['rules'] = [
     ...prefixRules,
-    ...(ruleOptionsEnable.屏蔽国外QUIC ? blockForeignQuic : []),
+    // 🌬️ 御风 | 断流：断流闸常驻（档位交给同名策略组，初始默认档由「屏蔽国外QUIC」开关决定）
+    ...foreignQuicGateRules,
     ...functionalRules,
 
     // 拾遗·兜底规则
