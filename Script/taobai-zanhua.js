@@ -106,6 +106,7 @@ const ruleOptionsEnable = {
   '🚫 掩扉 | 拦截': true, // 广告拦截（🚫 掩扉 | 拦截）
 
   // 以下为非分流策略配置
+  极简模式: false, // 是否启用极简模式（同步自上游：不生成地区组/倍率组/分流组，仅保留「🍑 桃印 | 总卷」出口，兜底 MATCH 走总卷）
   生成地区自动选择组: true, // 是否生成地区自动选择策略组
   隐藏地区手动选择组: false, // 是否隐藏地区手动选择策略组
   生成倍率组: true, // 是否生成低倍率/高倍率策略组
@@ -211,7 +212,7 @@ const regionDefinitions = [
     name: '🏮 灯 | 香江',
     flag: '🇭🇰',
     regex: /🇭🇰|香港|(?<![A-Za-z])HKG?(?![A-Za-z])|hong\s*kong/i,
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/HongKong.svg',
   },
   {
     name: '🗺️ 濠镜',
@@ -223,26 +224,26 @@ const regionDefinitions = [
     name: '🖌️ 砚 | 东瀛',
     flag: '🇯🇵',
     regex: /🇯🇵|日本|东京|大阪|京都|(?<![A-Za-z])JPN?(?![A-Za-z])|japan/i,
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Japan.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Japan.svg',
   },
   {
     name: '☁️ 羽 | 花旗',
     flag: '🇺🇸',
     regex:
       /🇺🇸|美国|纽约|洛杉矶|旧金山|芝加哥|休斯顿|迈阿密|西雅图|波士顿|华盛顿|拉斯维加斯|圣何塞|圣地亚哥|(?<![A-Za-z])USA?(?![A-Za-z])|america|united\s*states/i,
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/America.svg',
   },
   {
     name: '🧣 绫 | 狮城',
     flag: '🇸🇬',
     regex: /🇸🇬|新加坡|狮城|(?<![A-Za-z])SGP?(?![A-Za-z])|singapore/i,
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Singapore.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Singapore.svg',
   },
   {
     name: '📜 卷 | 宝岛',
     flag: '🇨🇳',
     regex: /🇨🇳|台湾|台北|高雄|(?<![A-Za-z])TWN?(?![A-Za-z])|taiwan/i,
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/China.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/China.svg',
   },
 ];
 
@@ -255,13 +256,13 @@ const rateRegionDefinitions = [
     name: lowRateRegionName,
     regex:
       /^(?!.*(?:剩|期)).*(?:(?<!\d)0\.[0-5]|(?<=[ \[\(|｜丨∣┃\-‐–—−－﹣])0[*×✕✖⨯⨉x倍])|(?:(?<=[ \[\(|｜丨∣┃\-‐–—−－﹣])[*×✕✖⨯⨉x]0(?=[ \)\]]|倍|$))|^(?!.*(?:客户端|软件)).*下载|低倍|免费|(?<![A-Za-z])free(?![A-Za-z])/i,
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Available_1.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Available.svg',
   },
   {
     name: highRateRegionName,
     regex:
       /(?<=[ \[\(|｜丨∣┃\-‐–—−－﹣])((?:[*×✕✖⨯⨉x]\s*(?:[2-9]\d*|[1-9]\d+)(?:\.\d+)?)|(?:(?<![\d.])(?:[2-9]\d*|[1-9]\d+)(?:\.\d+)?\s*(?:倍|[*×✕✖⨯⨉x])))/i,
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Airport.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Airport.svg',
   },
 ];
 
@@ -394,7 +395,7 @@ const urlTestBaseOption = {
   type: 'url-test',
   tolerance: 50,
   'exclude-type': 'DIRECT',
-  icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Auto.png',
+  icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Auto.svg',
   hidden: true,
 };
 
@@ -404,7 +405,7 @@ const loadBalanceBaseOption = {
   type: 'load-balance',
   strategy: 'sticky-sessions',
   'exclude-type': 'DIRECT',
-  icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Round_Robin.png',
+  icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/RoundRobin.svg',
   hidden: true,
 };
 
@@ -414,19 +415,19 @@ const baseGroups = [
     name: '🖐️ 拾印 | 手动',
     baseOption: selectBaseOption,
     includeAll: true,
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Static.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Static.svg',
   },
   {
     name: '🌸 寻花 | 自动',
     baseOption: urlTestBaseOption,
     includeAll: true,
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Auto.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Auto.svg',
   },
   {
     name: '🍃 分花 | 均衡',
     baseOption: loadBalanceBaseOption,
     includeAll: true,
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Round_Robin.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/RoundRobin.svg',
   },
 ];
 
@@ -446,7 +447,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geosite/googlefcm.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/MiToverG422/Qure@master/IconSet/Color/fcm.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Fcm.svg',
     rules: ['RULE-SET,googlefcm,💬 灵鸽·传讯'],
   },
   {
@@ -460,7 +461,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geosite/youtube.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/YouTube.svg',
     rules: ['RULE-SET,youtube,🎬 映画·油管'],
   },
   {
@@ -480,7 +481,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geoip/google.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Google_Search.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Google.svg',
     rules: ['RULE-SET,google,🗺️ 星图·谷歌', 'RULE-SET,google_ip,🗺️ 星图·谷歌,no-resolve'],
   },
   {
@@ -495,7 +496,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geosite/category-ai-!cn.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/ChatGPT.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/ChatGPT.svg',
     rules: ['RULE-SET,ai,🤖 天工·灵智'],
   },
   {
@@ -522,7 +523,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geoip/microsoft.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Microsoft.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Microsoft.svg',
     rules: ['RULE-SET,github,🍑 桃印 | 总卷', 'RULE-SET,microsoft,🪟 云笈·微软', 'RULE-SET,microsoft_ip,🪟 云笈·微软,no-resolve'],
   },
   {
@@ -543,7 +544,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geoip/apple.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Apple.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Apple.svg',
     rules: ['RULE-SET,apple,🍎 玉果·苹果', 'RULE-SET,apple_ip,🍎 玉果·苹果,no-resolve'],
   },
   {
@@ -563,7 +564,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geoip/telegram.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Telegram.svg',
     rules: ['RULE-SET,telegram,✈️ 飞书·电报', 'RULE-SET,telegram_ip,✈️ 飞书·电报,no-resolve'],
   },
   {
@@ -584,7 +585,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geoip/steam.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Steam.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Steam.svg',
     rules: ['RULE-SET,steam,🎮 雾阁·蒸汽', 'RULE-SET,steam_ip,🎮 雾阁·蒸汽,no-resolve'],
   },
   {
@@ -605,7 +606,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geoip/tiktok.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Tiktok.svg',
     rules: ['RULE-SET,tiktok,🎵 幻音·短影', 'RULE-SET,tiktok_ip,🎵 幻音·短影,no-resolve'],
   },
   {
@@ -625,7 +626,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geoip/twitter.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitter.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Twitter.svg',
     rules: ['RULE-SET,twitter,🕊️ 栖鸾·推特', 'RULE-SET,twitter_ip,🕊️ 栖鸾·推特,no-resolve'],
   },
   {
@@ -645,7 +646,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geoip/facebook.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/04ProxySoft/meta.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Meta.svg',
     rules: ['RULE-SET,meta,📘 墨册·脸书', 'RULE-SET,facebook_ip,📘 墨册·脸书,no-resolve'],
   },
   {
@@ -659,7 +660,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geosite/line.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Line.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Line.svg',
     rules: ['RULE-SET,line,💚 青笺·连线'],
   },
   {
@@ -679,7 +680,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geoip/netflix.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Netflix.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Netflix.svg',
     rules: ['RULE-SET,netflix,🎞️ 映雪·奈飞', 'RULE-SET,netflix_ip,🎞️ 映雪·奈飞,no-resolve'],
   },
   {
@@ -700,7 +701,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geosite/category-emby.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Emby.svg',
     rules: [
       'RULE-SET,emby,📚 藏经阁·影库',
       'RULE-SET,emos,📚 藏经阁·影库',
@@ -728,7 +729,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geosite/pikpak.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/03CNSoft/pikpak.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Pikpak.svg',
     rules: ['RULE-SET,pikpak,🎒 行囊·网盘'],
   },
   {
@@ -749,7 +750,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geoip/spotify.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Spotify.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Spotify.svg',
     rules: ['RULE-SET,spotify,🎧 韶音·声乐', 'RULE-SET,spotify_ip,🎧 韶音·声乐,no-resolve'],
   },
   {
@@ -764,7 +765,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geosite/category-cryptocurrency.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/04ProxySoft/Bitcoin.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Bitcoin.svg',
     rules: ['RULE-SET,cryptocurrency,🪙 通宝·加密'],
   },
   {
@@ -780,7 +781,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geosite/ehentai.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/lige47/QuanX-icon-rule@main/icon/04ProxySoft/exhentai.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Ehentai.svg',
     rules: ['RULE-SET,ehentai,🔖 秘阁·E站'],
   },
   {
@@ -795,7 +796,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geosite/category-ads-all.mrs',
       },
     },
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Advertising.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/AdBlock.svg',
     rules: ['RULE-SET,adblockmihomolite,🚫 掩扉 | 拦截'],
   },
 ];
@@ -1006,7 +1007,7 @@ function buildRegionGroups(filteredProxies, customProxies) {
     generatedRegionGroups.push(
       ...createRegionGroup(
         '🪶 散修·散点',
-        'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/World_Map.png',
+        'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/WorldMap.svg',
         otherProxies,
       ),
     );
@@ -1057,7 +1058,7 @@ function buildCustomizeGroups(filteredProxies, customizeList = customizeProxies)
     ...selectBaseOption,
     name: chainEnabled ? '🌉 合道·落地' : '🪶 本命·自建',
     proxies: customProxyNames,
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Server.svg',
   };
 
   return {
@@ -1073,6 +1074,7 @@ function buildCustomizeGroups(filteredProxies, customizeList = customizeProxies)
  * 构建基础/分流策略组/部分节点组、GLOBAL 组与规则集，并汇总分流规则
  */
 function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customizeInfo) {
+  const minimalModeEnabled = ruleOptionsEnable.极简模式;
   const blockForeignQuicEnabled = ruleOptionsEnable.屏蔽国外QUIC;
   const addAllNodesToServiceGroupsEnabled = ruleOptionsEnable.分流组添加所有节点;
   const chainEnabled = ruleOptionsEnable.链式代理;
@@ -1090,11 +1092,61 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
   const baseGroupNames = baseGroups.filter((g) => ruleOptionsEnable[g.name]).map((g) => g.name);
   const customGroupNames = customGroup ? [customGroup.name] : [];
 
+  const chainGroup =
+    chainEnabled && customGroup
+      ? {
+          ...selectBaseOption,
+          name: dialerProxyName,
+          proxies: filteredProxyNames,
+          icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Bypass.svg',
+        }
+      : null;
+
+  // 极简模式（同步自上游 AIsouler/MyClash）：不生成地区组/倍率组/分流组，仅保留「🍑 桃印 | 总卷」一个出口。
+  // 「🌬️ 御风 | 断流」因断流闸规则常驻而必须保留（规则目标组不可缺失），GLOBAL 中同样排除它以免误选断网。
+  if (minimalModeEnabled) {
+    const defaultGroup = {
+      ...selectBaseOption,
+      name: '🍑 桃印 | 总卷',
+      proxies: allProxiesNames,
+      icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Proxy.svg',
+    };
+    const quicGateGroup = {
+      ...selectBaseOption,
+      name: '🌬️ 御风 | 断流',
+      proxies: blockForeignQuicEnabled
+        ? ['REJECT', 'PASS-RULE', '🏠 归檐 | 直连']
+        : ['PASS-RULE', 'REJECT', '🏠 归檐 | 直连'],
+      icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Reject.png',
+    };
+    const directGroup = {
+      ...selectBaseOption,
+      name: '🏠 归檐 | 直连',
+      proxies: [...directProxies.map((p) => p.name)],
+      icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/China.svg',
+      hidden: true,
+    };
+    const globalGroup = {
+      ...selectBaseOption,
+      name: 'GLOBAL',
+      proxies: ['🍑 桃印 | 总卷', ...customGroupNames, ...(chainGroup ? [chainGroup.name] : []), '🏠 归檐 | 直连'],
+      icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Global.svg',
+    };
+    return {
+      globalGroup,
+      functionalGroups: [defaultGroup, quicGateGroup],
+      functionalRules: [],
+      finalRuleProviders,
+      chainGroup,
+      directGroup,
+    };
+  }
+
   functionalGroups.push({
     ...selectBaseOption,
     name: '🍑 桃印 | 总卷',
     proxies: [...groupNamesOfSelect, ...baseGroupNames, ...customGroupNames],
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Proxy.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Proxy.svg',
   });
 
   // 🌬️ 御风 | 断流：国外 QUIC 断流闸——御风栈里唯一路由可控的件，做成看得见的组，紧跟总卷
@@ -1111,7 +1163,7 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
 
   const orderedServiceConfigs = [
     ...serviceConfigs.filter((svc) => svc.name === '🚫 掩扉 | 拦截'),
-    ...serviceConfigs.filter((svc) => svc.name !== 'AdBlock'),
+    ...serviceConfigs.filter((svc) => svc.name !== '🚫 掩扉 | 拦截'),
   ];
   for (const svc of orderedServiceConfigs) {
     if (!ruleOptionsEnable[svc.name]) continue;
@@ -1156,28 +1208,14 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
     ...selectBaseOption,
     name: '🌙 拾遗 | 兜底',
     proxies: ['🍑 桃印 | 总卷', '🏠 归檐 | 直连', ...groupNamesOfSelect],
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Stack.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Stack.svg',
   });
-
-  if (customGroup) {
-    functionalGroups.push(customGroup);
-  }
-
-  const chainGroup =
-    chainEnabled && customGroup
-      ? {
-          ...selectBaseOption,
-          name: dialerProxyName,
-          proxies: filteredProxyNames,
-          icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png',
-        }
-      : null;
 
   const directGroup = {
     ...selectBaseOption,
     name: '🏠 归檐 | 直连',
     proxies: [...directProxies.map((p) => p.name)],
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/China.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/China.svg',
     hidden: hideManualSelectGroupEnabled,
   };
 
@@ -1191,7 +1229,7 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
       directGroup.name,
       ...generatedRegionGroups.map((g) => g.name),
     ],
-    icon: 'https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png',
+    icon: 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/Global.svg',
   };
 
   return { globalGroup, functionalGroups, functionalRules, finalRuleProviders, chainGroup, directGroup };
@@ -1646,7 +1684,8 @@ function main(config) {
 
   const { customProxies, customProxyNames, customGroup } = buildCustomizeGroups(filteredProxies);
 
-  const generatedRegionGroups = buildRegionGroups(filteredProxies, customProxies);
+  // 极简模式下不生成地区组/倍率组
+  const generatedRegionGroups = ruleOptionsEnable.极简模式 ? [] : buildRegionGroups(filteredProxies, customProxies);
 
   const { globalGroup, functionalGroups, functionalRules, finalRuleProviders, chainGroup, directGroup } =
     buildFunctionalGroups(filteredProxies, generatedRegionGroups, { customProxyNames, customGroup });
@@ -1740,6 +1779,7 @@ function main(config) {
   newConfig['proxy-groups'] = [
     globalGroup,
     ...functionalGroups,
+    ...(customGroup ? [customGroup] : []),
     ...(chainGroup ? [chainGroup] : []),
     directGroup,
     ...generatedRegionGroups,
@@ -1756,7 +1796,7 @@ function main(config) {
     'RULE-SET,geolocation-!cn,🍑 桃印 | 总卷',
     'RULE-SET,cn_ip,🏠 归檐 | 直连',
     'RULE-SET,private_ip,🏠 归檐 | 直连',
-    'MATCH,🌙 拾遗 | 兜底',
+    `MATCH,${ruleOptionsEnable.极简模式 ? '🍑 桃印 | 总卷' : '🌙 拾遗 | 兜底'}`, // 极简模式无「🌙 拾遗 | 兜底」组，兜底走总卷
   ];
 
   return newConfig;
