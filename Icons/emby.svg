@@ -6,10 +6,10 @@
     </linearGradient>
   </defs>
   <rect x="1" y="1" width="46" height="46" rx="13" fill="url(#zbzh)"/>
-
-  <g fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="13" y="15" width="22" height="18" rx="4"/>
-    <line x1="20.3" y1="15" x2="20.3" y2="33"/>
-    <line x1="27.7" y1="15" x2="27.7" y2="33"/>
+  <g fill="#FFFFFF">
+    <rect x="14" y="12.5" width="5" height="23"/>
+    <rect x="14" y="12.5" width="20" height="5"/>
+    <rect x="14" y="21.5" width="15" height="5"/>
+    <rect x="14" y="30.5" width="20" height="5"/>
   </g>
 </svg>

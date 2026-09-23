@@ -322,7 +322,7 @@
   <a class="brand" href="#top">桃白簪花</a>
   <a class="item" href="#intro">简介</a>
   <a class="item" href="#features">四项增强</a>
-  <a class="item" href="#mapping">卷名对照</a>
+  <a class="item" href="#mapping">命名对照</a>
   <a class="item" href="#usage">使用方法</a>
   <a class="item" href="#thanks">致谢</a>
   <a class="item" href="https://github.com/JokerXiaoMo/taobai-zanhua">GitHub ↗</a>
@@ -336,7 +336,7 @@
     <div class="slogan">以桃为印 · <b>收存山河</b></div>
     <p class="desc">
       面向 <strong>mihomo / Clash Meta</strong> 内核的中式动漫长卷风配置覆写脚本，
-      将机场订阅覆写为一套卷名策略组体系，并为「超稳定、超低延迟访问」做了四项增强。
+      将机场订阅覆写为一套标准功能名 / 服务名的策略组体系，并为「超稳定、超低延迟访问」做了四项增强。
     </p>
     <div class="badges">
       <span class="badge">⛩ 内核 mihomo</span>
@@ -364,13 +364,13 @@
       <div class="reveal">
         <p class="lead">
           <strong>「桃白簪花」</strong>是一份面向 mihomo（Clash Meta）内核的<strong>配置覆写脚本</strong>：
-          将机场订阅覆写为一套长卷式命名的完整策略组体系，并针对
+          将机场订阅覆写为一套标准功能名 / 服务名命名的完整策略组体系，并针对
           <strong>「超稳定、超低延迟访问各个 APP」</strong>做了四项增强。
         </p>
         <div class="quote">
           🙏 本项目基于 <b>AIsouler/MyClash</b> 的 <code>mihomoScript.js</code> 微改而来——
           分流逻辑、规则集与节点处理均出自原作者之手。本版在其基础上做了
-          <b>长卷式命名重塑</b>与<b>连接稳定性增强</b>，并重新设计了文档与项目结构。
+          <b>命名重塑</b>与<b>连接稳定性增强</b>，并重新设计了图标、文档与项目结构。
         </div>
       </div>
       <div class="frame reveal">
@@ -401,7 +401,7 @@
         <p><code>keep-alive-interval</code> 与 <code>tcp-keep-alive-idle</code> 均 30s，NAT 映射不易失效，减少重连与延迟抖动。</p>
       </div>
       <div class="card reveal"><span class="num">肆</span>
-        <h3><span class="ic">🌸</span>「寻花」自动组</h3>
+        <h3><span class="ic">🌸</span>「自动选择」组</h3>
         <p>50ms 容差 url-test 实时测速，始终自动切换最低延迟线路。</p>
       </div>
     </div>
@@ -410,47 +410,51 @@
     </p>
   </section>
 
-  <!-- 雅号对照 -->
+  <!-- 命名对照 -->
   <section id="mapping">
     <div class="sec-head reveal">
-      <div class="cn">卷 名 对 照</div>
+      <div class="cn">命 名 对 照</div>
       <div class="en">Naming Map</div>
       <div class="divider">❖</div>
     </div>
+    <p class="reveal" style="text-align:center;margin:-.4rem 0 1.8rem;color:var(--ink-soft);font-size:.9rem">
+      2026-09 起命名重做：<b>左为旧卷名，右为脚本当前标准组名</b>——面板所见即标准名，不再靠意象猜谜。
+    </p>
     <div class="maps">
       <div class="map-block reveal">
         <h4>基础策略组</h4>
         <table><tbody>
-          <tr><td class="o">手动选择</td><td class="arr">➜</td><td class="n">🖐️ 拾印 | 手动</td></tr>
-          <tr><td class="o">自动选择</td><td class="arr">➜</td><td class="n">🌸 寻花 | 自动</td></tr>
-          <tr><td class="o">负载均衡</td><td class="arr">➜</td><td class="n">🍃 分花 | 均衡</td></tr>
-          <tr><td class="o">默认代理</td><td class="arr">➜</td><td class="n">🍑 桃印 | 总卷</td></tr>
-          <tr><td class="o">直连</td><td class="arr">➜</td><td class="n">🏠 归檐 | 直连</td></tr>
-          <tr><td class="o">漏网之鱼</td><td class="arr">➜</td><td class="n">🌙 拾遗 | 兜底</td></tr>
+          <tr><td class="o">🖐️ 拾印 | 手动</td><td class="arr">➜</td><td class="n">手动选择</td></tr>
+          <tr><td class="o">🌸 寻花 | 自动</td><td class="arr">➜</td><td class="n">自动选择</td></tr>
+          <tr><td class="o">🍃 分花 | 均衡</td><td class="arr">➜</td><td class="n">负载均衡</td></tr>
+          <tr><td class="o">🍑 桃印 | 总卷</td><td class="arr">➜</td><td class="n">桃白簪花 · 主控</td></tr>
+          <tr><td class="o">🏠 归檐 | 直连</td><td class="arr">➜</td><td class="n">直连</td></tr>
+          <tr><td class="o">🌙 拾遗 | 兜底</td><td class="arr">➜</td><td class="n">兜底</td></tr>
+          <tr><td class="o">🌬️ 御风 | 断流</td><td class="arr">➜</td><td class="n">QUIC 断流闸</td></tr>
         </tbody></table>
       </div>
       <div class="map-block reveal">
         <h4>地区与倍率</h4>
         <table><tbody>
-          <tr><td class="o">中国香港</td><td class="arr">➜</td><td class="n">🏮 灯 | 香江</td></tr>
-          <tr><td class="o">中国澳门</td><td class="arr">➜</td><td class="n">🗺️ 濠镜</td></tr>
-          <tr><td class="o">日本</td><td class="arr">➜</td><td class="n">🖌️ 砚 | 东瀛</td></tr>
-          <tr><td class="o">美国</td><td class="arr">➜</td><td class="n">☁️ 羽 | 花旗</td></tr>
-          <tr><td class="o">新加坡</td><td class="arr">➜</td><td class="n">🧣 绫 | 狮城</td></tr>
-          <tr><td class="o">中国台湾</td><td class="arr">➜</td><td class="n">📜 卷 | 宝岛</td></tr>
-          <tr><td class="o">低倍率节点</td><td class="arr">➜</td><td class="n">⚖️ 轻羽·低倍</td></tr>
-          <tr><td class="o">高倍率节点</td><td class="arr">➜</td><td class="n">🔥 重岳·高倍</td></tr>
+          <tr><td class="o">🏮 灯 | 香江</td><td class="arr">➜</td><td class="n">🇨🇳 中国香港</td></tr>
+          <tr><td class="o">🗺️ 濠镜</td><td class="arr">➜</td><td class="n">🇨🇳 中国澳门</td></tr>
+          <tr><td class="o">📜 卷 | 宝岛</td><td class="arr">➜</td><td class="n">🇨🇳 中国台湾</td></tr>
+          <tr><td class="o">🖌️ 砚 | 东瀛</td><td class="arr">➜</td><td class="n">🇯🇵 日本</td></tr>
+          <tr><td class="o">☁️ 羽 | 花旗</td><td class="arr">➜</td><td class="n">🇺🇸 美国</td></tr>
+          <tr><td class="o">🧣 绫 | 狮城</td><td class="arr">➜</td><td class="n">🇸🇬 新加坡</td></tr>
+          <tr><td class="o">⚖️ 轻羽·低倍</td><td class="arr">➜</td><td class="n">低倍率节点</td></tr>
+          <tr><td class="o">🔥 重岳·高倍</td><td class="arr">➜</td><td class="n">高倍率节点</td></tr>
         </tbody></table>
       </div>
       <div class="map-block reveal">
         <h4>分流策略组（节选）</h4>
         <table><tbody>
-          <tr><td class="o">Telegram</td><td class="arr">➜</td><td class="n">✈️ 飞书·电报</td></tr>
-          <tr><td class="o">YouTube</td><td class="arr">➜</td><td class="n">🎬 映画·油管</td></tr>
-          <tr><td class="o">Netflix</td><td class="arr">➜</td><td class="n">🎞️ 映雪·奈飞</td></tr>
-          <tr><td class="o">Steam</td><td class="arr">➜</td><td class="n">🎮 雾阁·蒸汽</td></tr>
-          <tr><td class="o">Spotify</td><td class="arr">➜</td><td class="n">🎧 韶音·声乐</td></tr>
-          <tr><td class="o">AdBlock</td><td class="arr">➜</td><td class="n">🚫 掩扉 | 拦截</td></tr>
+          <tr><td class="o">✈️ 飞书·电报</td><td class="arr">➜</td><td class="n">Telegram</td></tr>
+          <tr><td class="o">🎬 映画·油管</td><td class="arr">➜</td><td class="n">YouTube</td></tr>
+          <tr><td class="o">🎞️ 映雪·奈飞</td><td class="arr">➜</td><td class="n">Netflix</td></tr>
+          <tr><td class="o">🎮 雾阁·蒸汽</td><td class="arr">➜</td><td class="n">Steam</td></tr>
+          <tr><td class="o">🎧 韶音·声乐</td><td class="arr">➜</td><td class="n">Spotify</td></tr>
+          <tr><td class="o">🚫 掩扉 | 拦截</td><td class="arr">➜</td><td class="n">广告拦截</td></tr>
         </tbody></table>
       </div>
     </div>
@@ -474,7 +478,7 @@
         <div><h5>关闭客户端 DNS 覆写</h5><p>设置 → DNS 覆写关闭，交给脚本接管，避免冲突。</p></div>
       </div>
       <div class="step reveal">
-        <div><h5>重新激活订阅</h5><p>即可看到全套卷名策略组。Bettbox 用户可直接图形化开关各项功能。</p></div>
+        <div><h5>重新激活订阅</h5><p>即可看到全套标准命名策略组。Bettbox 用户可直接图形化开关各项功能。</p></div>
       </div>
     </div>
     <div class="copybox reveal" id="rawBox">
@@ -502,16 +506,10 @@
         <span class="av">核</span><span class="t"><b>MetaCubeX/mihomo</b><span>强大的代理内核</span></span>
       </a>
       <a class="tk reveal" href="https://github.com/appshubcc/bett-rules" target="_blank" rel="noopener">
-        <span class="av">规</span><span class="t"><b>appshubcc/bett-rules</b><span>主要规则集来源</span></span><span class="role">36 处</span>
+        <span class="av">规</span><span class="t"><b>appshubcc/bett-rules</b><span>主要规则集来源</span></span><span class="role">40 处</span>
       </a>
-      <a class="tk reveal" href="https://github.com/Koolson/Qure" target="_blank" rel="noopener">
-        <span class="av">图</span><span class="t"><b>Koolson/Qure</b><span>主要策略组图标</span></span><span class="role">34 处</span>
-      </a>
-      <a class="tk reveal" href="https://github.com/lige47/QuanX-icon-rule" target="_blank" rel="noopener">
-        <span class="av">图</span><span class="t"><b>lige47/QuanX-icon-rule</b><span>补充图标（PikPak / Crypto / E站）</span></span><span class="role">3 处</span>
-      </a>
-      <a class="tk reveal" href="https://github.com/MiToverG422/Qure" target="_blank" rel="noopener">
-        <span class="av">图</span><span class="t"><b>MiToverG422/Qure</b><span>补充图标（FCM）</span></span><span class="role">1 处</span>
+      <a class="tk reveal" href="https://github.com/JokerXiaoMo/taobai-zanhua/tree/main/Icons" target="_blank" rel="noopener">
+        <span class="av">图</span><span class="t"><b>本项目自研 · 簪花印</b><span>全部策略组图标（38 枚 SVG，存于 Icons/）</span></span><span class="role">44 处</span>
       </a>
       <a class="tk reveal" href="https://github.com/666OS/rules" target="_blank" rel="noopener">
         <span class="av">规</span><span class="t"><b>666OS/rules</b><span>Emby 域名规则</span></span><span class="role">1 处</span>
