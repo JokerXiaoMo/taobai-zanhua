@@ -30,7 +30,7 @@
 - 🍑 覆写后，策略组一律采用**标准功能名 / 标准服务名**（如「🇯🇵 日本」「YouTube」「兜底」），面板一眼可懂，不再靠意象猜谜
 - 🔁 订阅更新后重新覆写即可，地区组、倍率组、分流组**全部自动生成**，无需手动维护
 - 🩹 自动处理机场私有 DNS / hosts 映射导致的节点解析问题，**DNS 无泄露**
-- 🎨 全套策略组图标为自研「**簪花印**」体系（38 枚 SVG，存于本仓库 `Icons/`），桃粉底白符，与主题一色
+- 🎨 全套策略组图标为自研「**簪花印**」体系（39 枚 SVG，存于本仓库 `Icons/`），桃粉底白符，与主题一色
 - 🎛 顶部 `ruleOptionsEnable` 提供全部开关，注释齐全，想改就改
 
 > 🙏 **本项目基于 [AIsouler/MyClash](https://github.com/AIsouler/MyClash) 的 `mihomoScript.js` 微改而来**——分流逻辑、规则集与节点处理均出自原作者之手，在此致以诚挚谢意。本版在其基础上做了**命名重塑**与**连接稳定性增强**，并重新设计了图标、文档与项目结构。
@@ -156,6 +156,7 @@
 | 国外 AI | **AI 服务** | `ai.svg` |
 | PikPak | **PikPak** | `pikpak.svg` |
 | 加密货币 | **加密货币** | `crypto.svg` |
+| PayPal | **PayPal** | `paypal.svg` |
 | E-Hentai | **E-Hentai** | `ehentai.svg` |
 | 广告拦截 | **广告拦截** | `adblock.svg` |
 
@@ -183,12 +184,12 @@
 | 尺寸 | 48 × 48，圆角 13 |
 | 底 | 桃粉渐变 `#F0A8C0` → `#E58BA8`，外描边 `#E58BA8` |
 | 符 | 白色简笔符号，一眼可辨 |
-| 数量 | 38 枚 SVG，全部存放于本仓库 [`Icons/`](Icons) |
+| 数量 | 39 枚 SVG，全部存放于本仓库 [`Icons/`](Icons) |
 
 - **地区图标**：严格按真实国旗绘制——港澳台统一**五星红旗**；日本日章旗、美国星条旗、新加坡星月旗
 - **服务图标**：按各品牌 / 站点的**识别图形**绘制（粉底白符），如 YouTube 播放框、Spotify 三道声弧、Telegram 纸飞机、Steam 曲柄阀
 
-脚本中 44 处图标引用**全部指向本仓库**，经 jsDelivr 分发：
+脚本中 45 处图标引用**全部指向本仓库**，经 jsDelivr 分发：
 
 ```
 https://fastly.jsdelivr.net/gh/JokerXiaoMo/taobai-zanhua@main/Icons/youtube.svg
@@ -254,7 +255,7 @@ https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/taobai-z
 | `御风栈启用mips` | 🌬️ 御风之本：TUN 用 mips 栈；关闭回退 `mixed`（老内核兜底） |
 | `御风栈整运` / `御风栈让路` / `御风栈纳新` | 🌬️ 御风三式（MTU+GSO / 私网不过栈 / EIM 全锥），详见上文 |
 | `净泉真假分明` | fake-ip 规则化：直连域名 real-ip、其余 fake-ip；关闭回退旧写法 |
-| 各分流组（`YouTube`、`Google FCM` 等 19 项） | 关闭后该策略组与对应规则整体移除 |
+| 各分流组（`YouTube`、`Google FCM` 等 20 项） | 关闭后该策略组与对应规则整体移除 |
 
 ---
 
@@ -264,7 +265,7 @@ https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/taobai-z
 taobai-zanhua
 ├── Script/
 │   └── taobai-zanhua.js    # 覆写脚本本体（桃白簪花）
-├── Icons/                  # 自研「簪花印」图标（38 枚 SVG）
+├── Icons/                  # 自研「簪花印」图标（39 枚 SVG）
 ├── docs/
 │   ├── index.html          # 在线长卷（含动效）
 │   └── assets/
@@ -305,7 +306,7 @@ taobai-zanhua
 
 **🎨 策略组图标**
 
-- **本项目自研**「簪花印」图标体系（38 枚 SVG，见 [`Icons/`](Icons)）：桃粉渐变底 + 白色简笔符号；地区图标按真实国旗绘制，服务图标按各品牌识别图形绘制。早期版本曾引用 [Koolson/Qure](https://github.com/Koolson/Qure)、[MiToverG422/Qure](https://github.com/MiToverG422/Qure)、[lige47/QuanX-icon-rule](https://github.com/lige47/QuanX-icon-rule) 等图标集，现已全部替换为自研图标，在此一并致谢其启发
+- **本项目自研**「簪花印」图标体系（39 枚 SVG，见 [`Icons/`](Icons)）：桃粉渐变底 + 白色简笔符号；地区图标按真实国旗绘制，服务图标按各品牌识别图形绘制。早期版本曾引用 [Koolson/Qure](https://github.com/Koolson/Qure)、[MiToverG422/Qure](https://github.com/MiToverG422/Qure)、[lige47/QuanX-icon-rule](https://github.com/lige47/QuanX-icon-rule) 等图标集，现已全部替换为自研图标，在此一并致谢其启发
 
 **🖥 面板**
 
@@ -325,7 +326,7 @@ taobai-zanhua
 
 本项目文档、项目结构与 `Icons/` 图标以 [MIT](LICENSE) 协议开源。
 
-覆写脚本 `Script/taobai-zanhua.js` 为 [AIsouler/MyClash](https://github.com/AIsouler/MyClash)（未附带开源协议）之 `mihomoScript.js` 的修改版本，其著作权归属原作者 AIsouler；本项目在使用处均已显著标注来源。若原作者提出异议，将第一时间处理。
+覆写脚本 `Script/taobai-zanhua.js` 为 [AIsouler/MyClash](https://github.com/AIsouler/MyClash)（MIT 协议）之 `mihomoScript.js` 的修改版本，其著作权归属原作者 AIsouler；本项目在使用处均已显著标注来源。若原作者提出异议，将第一时间处理。
 
 ---
 

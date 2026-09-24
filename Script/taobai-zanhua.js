@@ -87,6 +87,7 @@ const ruleOptionsEnable = {
   'PikPak': true, // PikPak 网盘
   'Spotify': true, // Spotify 音乐
   '加密货币': true, // 加密货币
+  'PayPal': true, // PayPal 支付
   'E-Hentai': true, // E-Hentai
   '广告拦截': true, // 广告拦截
 
@@ -754,6 +755,20 @@ const serviceConfigs = [
     rules: ['RULE-SET,cryptocurrency,加密货币'],
   },
   {
+    name: 'PayPal',
+    baseOption: selectBaseOption,
+    providers: {
+      paypal: {
+        ...ruleProviderCommonDomain,
+        url: 'https://fastly.jsdelivr.net/gh/appshubcc/bett-rules@meta/geo/geosite/paypal.mrs',
+        path: './ruleset/paypal.mrs',
+        'path-in-bundle': 'geo/geosite/paypal.mrs',
+      },
+    },
+    icon: 'https://fastly.jsdelivr.net/gh/JokerXiaoMo/taobai-zanhua@main/Icons/paypal.svg',
+    rules: ['RULE-SET,paypal,PayPal'],
+  },
+  {
     name: 'E-Hentai',
     baseOption: selectBaseOption,
     direct: true,
@@ -1210,6 +1225,8 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
     proxies: [
       // 「QUIC 断流闸」只是断流闸规则的目标组，不是通用出口——GLOBAL 模式下误选会全网中断，必须排除
       ...functionalGroups.filter((g) => g.name !== 'QUIC 断流闸').map((g) => g.name),
+      // 自建节点/链式落地不进 functionalGroups（main 里单独拼装），GLOBAL 需按名补入
+      ...customGroupNames,
       ...(chainGroup ? [chainGroup.name] : []),
       directGroup.name,
       ...generatedRegionGroups.map((g) => g.name),
@@ -1513,6 +1530,8 @@ function fakeIpPatternToRule(pattern) {
  * 2. proxy-server-nameserver 有且仅有一个 DNS 并且该 DNS 包含 127.0.0.1 并且 listen 包含 0.0.0.0
  */
 function buildDnsAndHostsConfig(config, filteredProxies) {
+  const minimalModeEnabled = ruleOptionsEnable.极简模式;
+
   const originalDnsConfig = config.dns || {};
 
   const proxyServerNameservers = originalDnsConfig['proxy-server-nameserver'] || [];
@@ -1598,7 +1617,8 @@ function buildDnsAndHostsConfig(config, filteredProxies) {
       'RULE-SET,nvidia_cn,real-ip',
       'RULE-SET,apple_cn,real-ip',
       'RULE-SET,microsoft_cn,real-ip',
-      ...(ruleOptionsEnable['Google FCM'] ? ['RULE-SET,googlefcm,real-ip'] : []),
+      // 极简模式不生成分流组，googlefcm 规则集不会注册，DNS 里不能再引用（否则内核报规则集缺失）
+      ...(!minimalModeEnabled && ruleOptionsEnable['Google FCM'] ? ['RULE-SET,googlefcm,real-ip'] : []),
       ...[...new Set(proxyFakeIpFilter.map(fakeIpPatternToRule).filter(Boolean))],
       'MATCH,fake-ip',
     ],
@@ -1608,7 +1628,7 @@ function buildDnsAndHostsConfig(config, filteredProxies) {
       'rule-set:private',
       'rule-set:fakeip_filter',
       'rule-set:geolocation-cn',
-      ...(ruleOptionsEnable['Google FCM'] ? ['rule-set:googlefcm'] : []),
+      ...(!minimalModeEnabled && ruleOptionsEnable['Google FCM'] ? ['rule-set:googlefcm'] : []),
       ...proxyFakeIpFilter,
     ],
   };
