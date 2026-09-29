@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+<defs><clipPath id="c"><rect x="0" y="8" width="48" height="32" rx="6"/></clipPath></defs>
+<g clip-path="url(#c)">
+<rect x="0" y="8" width="48" height="16" fill="#ED2939"/>
+<rect x="0" y="24" width="48" height="16" fill="#FFFFFF"/>
+<path d="M21.88 10.98A7.0 7.0 0 1 0 21.88 21.02A5.6 5.6 0 1 1 21.88 10.98Z" fill="#FFFFFF"/>
+<path d="M32.00 9.00L32.45 10.38L33.90 10.38L32.73 11.24L33.18 12.62L32.00 11.76L30.82 12.62L31.27 11.24L30.10 10.38L31.55 10.38Z" fill="#FFFFFF"/>
+<path d="M36.76 12.45L37.20 13.84L38.66 13.84L37.48 14.69L37.93 16.07L36.76 15.22L35.58 16.07L36.03 14.69L34.85 13.84L36.31 13.84Z" fill="#FFFFFF"/>
+<path d="M34.94 18.05L35.39 19.43L36.84 19.43L35.67 20.28L36.11 21.66L34.94 20.81L33.76 21.66L34.21 20.28L33.04 19.43L34.49 19.43Z" fill="#FFFFFF"/>
+<path d="M29.06 18.05L29.51 19.43L30.96 19.43L29.79 20.28L30.24 21.66L29.06 20.81L27.89 21.66L28.33 20.28L27.16 19.43L28.61 19.43Z" fill="#FFFFFF"/>
+<path d="M27.24 12.45L27.69 13.84L29.15 13.84L27.97 14.69L28.42 16.07L27.24 15.22L26.07 16.07L26.52 14.69L25.34 13.84L26.80 13.84Z" fill="#FFFFFF"/>
+</g>
+<rect x="0.5" y="8.5" width="47" height="31" rx="6" fill="none" stroke="#E58BA8" stroke-width="1" opacity="0.8"/>
+</svg>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>桃白簪花 · mihomo 覆写脚本</title>
+<meta name="description" content="中式动漫长卷风 mihomo 配置覆写脚本 —— 以桃为印，收存山河。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f8f2e5;
+    --paper-2:#f1e9da;
+    --ink:#102a36;
+    --ink-soft:#5d6f75;
+    --gold:#c49a51;
+    --gold-light:#dfc389;
+    --cinnabar:#ad493b;
+    --jade:#8fb3aa;
+    --card:rgba(255,255,255,.72);
+    --line:rgba(16,42,54,.12);
+    --shadow:0 10px 40px rgba(16,42,54,.10);
+    --serif:'Noto Serif SC','Source Han Serif SC','Songti SC','SimSun',serif;
+    --brush:'Ma Shan Zheng','Noto Serif SC',cursive;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--serif);
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 15% -10%, #fdfaf3 0%, transparent 60%),
+      radial-gradient(900px 500px at 90% 10%, #eef2f5 0%, transparent 55%),
+      var(--paper);
+    overflow-x:hidden;
+    line-height:1.85;
+  }
+  ::selection{background:rgba(184,137,43,.25)}
+
+  /* ---------- 背景动效层 ---------- */
+  .fx{position:fixed;inset:0;pointer-events:none;z-index:1}
+  .petal{
+    position:absolute;top:-6vh;
+    border-radius:60% 40% 55% 45%/60% 45% 55% 40%;
+    background:linear-gradient(140deg,#ffd7e2,#f7a8bd);
+    opacity:.75;
+    animation:fall linear infinite;
+    will-change:transform;
+  }
+  @keyframes fall{
+    0%{transform:translate3d(0,-10vh,0) rotate(0deg);opacity:0}
+    8%{opacity:.85}
+    50%{transform:translate3d(6vw,50vh,0) rotate(180deg)}
+    92%{opacity:.7}
+    100%{transform:translate3d(-4vw,112vh,0) rotate(380deg);opacity:0}
+  }
+  .mote{
+    position:absolute;bottom:-10px;border-radius:50%;
+    background:radial-gradient(circle,rgba(217,180,92,.95),rgba(217,180,92,0) 70%);
+    animation:rise linear infinite;
+    will-change:transform,opacity;
+  }
+  @keyframes rise{
+    0%{transform:translateY(0) scale(.6);opacity:0}
+    15%{opacity:.9}
+    100%{transform:translateY(-105vh) scale(1.15);opacity:0}
+  }
+  .mist{
+    position:fixed;left:-20%;right:-20%;bottom:-8%;height:42vh;z-index:1;pointer-events:none;
+    background:radial-gradient(60% 100% at 30% 100%, rgba(255,255,255,.85), transparent 70%),
+               radial-gradient(50% 90% at 75% 100%, rgba(238,242,245,.9), transparent 70%);
+    filter:blur(6px);
+    animation:drift 26s ease-in-out infinite alternate;
+  }
+  @keyframes drift{from{transform:translateX(-2.5%)}to{transform:translateX(2.5%)}}
+
+  /* ---------- 顶部导航 ---------- */
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;align-items:center;gap:.4rem;
+    padding:.7rem clamp(1rem,4vw,2.5rem);
+    background:rgba(246,242,234,.72);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+    transform:translateY(-100%);transition:transform .5s cubic-bezier(.2,.8,.2,1);
+  }
+  .nav.show{transform:translateY(0)}
+  .nav .brand{font-family:var(--brush);font-size:1.5rem;color:var(--cinnabar);margin-right:auto;text-decoration:none;letter-spacing:.1em}
+  .nav a.item{
+    color:var(--ink-soft);text-decoration:none;font-size:.92rem;
+    padding:.3rem .8rem;border-radius:999px;transition:.28s;position:relative;
+  }
+  .nav a.item:hover{color:var(--cinnabar);background:rgba(178,58,46,.08)}
+  @media(max-width:720px){.nav a.item{display:none}}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;min-height:100svh;display:grid;place-items:center;overflow:hidden;z-index:2}
+  .hero-bg{
+    position:absolute;inset:-4% -2%;
+    background:url('assets/hero.webp') center 32%/cover no-repeat;
+    animation:kenburns 30s ease-in-out infinite alternate;
+    will-change:transform;
+  }
+  @keyframes kenburns{
+    from{transform:scale(1.04) translate3d(0,0,0)}
+    to{transform:scale(1.12) translate3d(-1.5%,-1.5%,0)}
+  }
+  .hero::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg, rgba(246,242,234,.92) 0%, rgba(246,242,234,.55) 38%, rgba(246,242,234,0) 70%),
+               linear-gradient(0deg, var(--paper) 0%, transparent 22%);
+  }
+  .hero-inner{position:relative;z-index:3;padding:6rem clamp(1.2rem,5vw,4rem);max-width:1180px;width:100%}
+  .seal{
+    display:inline-flex;align-items:center;gap:.55rem;
+    font-size:.85rem;letter-spacing:.22em;color:var(--cinnabar);
+    border:1px solid rgba(178,58,46,.35);border-radius:999px;
+    padding:.32rem 1rem .32rem .8rem;background:rgba(255,255,255,.55);
+    opacity:0;animation:up .9s .15s forwards;
+  }
+  .seal i{width:8px;height:8px;border-radius:50%;background:var(--cinnabar);box-shadow:0 0 0 0 rgba(178,58,46,.5);animation:pulse 2.4s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(178,58,46,0)}100%{box-shadow:0 0 0 0 rgba(178,58,46,0)}}
+  h1.title{
+    font-family:var(--brush);font-weight:400;
+    font-size:clamp(3.4rem,11vw,7.5rem);line-height:1.08;
+    letter-spacing:.06em;color:var(--ink);
+    margin:.7rem 0 .2rem;
+    opacity:0;animation:up 1s .3s forwards;
+  }
+  h1.title em{font-style:normal;color:var(--cinnabar);position:relative;display:inline-block}
+  h1.title em::after{
+    content:'';position:absolute;left:0;right:0;bottom:.08em;height:.14em;
+    background:linear-gradient(90deg,transparent,rgba(184,137,43,.55),transparent);
+    transform:scaleX(0);animation:draw 1.1s 1.3s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  @keyframes draw{to{transform:scaleX(1)}}
+  .slogan{
+    font-size:clamp(1.05rem,2.4vw,1.4rem);color:var(--ink-soft);letter-spacing:.3em;
+    opacity:0;animation:up 1s .5s forwards;
+  }
+  .slogan b{color:var(--gold);font-weight:600}
+  .desc{
+    margin-top:1.3rem;max-width:34em;color:var(--ink-soft);
+    opacity:0;animation:up 1s .65s forwards;
+  }
+  .badges{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1.6rem;opacity:0;animation:up 1s .8s forwards}
+  .badge{
+    font-size:.8rem;padding:.34rem .9rem;border-radius:999px;
+    background:var(--card);border:1px solid var(--line);color:var(--ink-soft);
+    backdrop-filter:blur(6px);transition:.3s;
+  }
+  .badge:hover{transform:translateY(-2px);border-color:rgba(184,137,43,.5);color:var(--gold)}
+  .cta{display:flex;flex-wrap:wrap;gap:.9rem;margin-top:2.1rem;opacity:0;animation:up 1s .95s forwards}
+  .btn{
+    text-decoration:none;font-size:1rem;padding:.82rem 1.9rem;border-radius:999px;
+    letter-spacing:.12em;transition:.32s;position:relative;overflow:hidden;
+  }
+  .btn.primary{
+    color:#fff;background:linear-gradient(135deg,var(--cinnabar),#8f2b21);
+    box-shadow:0 8px 26px rgba(178,58,46,.32);
+  }
+  .btn.primary:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(178,58,46,.42)}
+  .btn.ghost{color:var(--ink);border:1px solid var(--line);background:rgba(255,255,255,.6)}
+  .btn.ghost:hover{transform:translateY(-3px);border-color:var(--gold);color:var(--gold)}
+  .scroll-hint{
+    position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+    color:var(--ink-soft);font-size:.78rem;letter-spacing:.3em;z-index:3;
+    opacity:0;animation:up 1s 1.4s forwards;
+  }
+  .scroll-hint span{display:block;width:1px;height:34px;margin:.5rem auto 0;background:linear-gradient(var(--gold),transparent);animation:hint 1.8s ease-in-out infinite}
+  @keyframes hint{0%,100%{transform:scaleY(.35);opacity:.4}50%{transform:scaleY(1);opacity:1}}
+  @keyframes up{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+
+  /* ---------- 通用区块 ---------- */
+  main{position:relative;z-index:2}
+  section{padding:clamp(3.5rem,8vw,6.5rem) clamp(1.2rem,5vw,4rem);max-width:1180px;margin:0 auto}
+  .sec-head{text-align:center;margin-bottom:clamp(2rem,5vw,3.4rem)}
+  .sec-head .cn{
+    font-family:var(--brush);font-size:clamp(2rem,5vw,2.9rem);letter-spacing:.12em;
+  }
+  .sec-head .en{font-size:.78rem;letter-spacing:.42em;color:var(--gold);text-transform:uppercase;margin-top:.2rem}
+  .divider{display:flex;align-items:center;justify-content:center;gap:.8rem;margin:.9rem 0 0;color:var(--gold)}
+  .divider::before,.divider::after{content:'';height:1px;width:min(120px,22vw);background:linear-gradient(90deg,transparent,var(--gold-light))}
+  .divider::after{background:linear-gradient(270deg,transparent,var(--gold-light))}
+
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- 简介卡片 ---------- */
+  .intro-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(1.5rem,4vw,3rem);align-items:center}
+  @media(max-width:860px){.intro-grid{grid-template-columns:1fr}}
+  .lead{font-size:clamp(1rem,2vw,1.15rem);color:var(--ink-soft)}
+  .lead strong{color:var(--ink);font-weight:600}
+  .quote{
+    margin-top:1.4rem;padding:1.1rem 1.4rem;border-left:3px solid var(--gold);
+    background:linear-gradient(90deg,rgba(217,180,92,.10),transparent);
+    border-radius:0 10px 10px 0;font-size:.95rem;color:var(--ink-soft);
+  }
+  .frame{
+    position:relative;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);
+    border:1px solid var(--line);
+  }
+  .frame img{display:block;width:100%;height:auto;transform:scale(1.02);transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+  .frame:hover img{transform:scale(1.06)}
+  .frame .cap{
+    position:absolute;left:0;right:0;bottom:0;padding:.8rem 1.1rem;
+    background:linear-gradient(transparent,rgba(34,48,63,.72));color:#fff;font-size:.85rem;letter-spacing:.14em;
+  }
+
+  /* ---------- 特性卡片 ---------- */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:1.2rem}
+  .card{
+    position:relative;padding:1.7rem 1.5rem;border-radius:16px;
+    background:var(--card);border:1px solid var(--line);
+    backdrop-filter:blur(8px);transition:.42s cubic-bezier(.2,.8,.2,1);overflow:hidden;
+  }
+  .card::before{
+    content:'';position:absolute;inset:0;border-radius:16px;padding:1px;
+    background:linear-gradient(135deg,rgba(217,180,92,.7),transparent 45%,rgba(178,58,46,.45));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    opacity:0;transition:opacity .42s;
+  }
+  .card:hover{transform:translateY(-8px);box-shadow:0 18px 44px rgba(34,48,63,.14)}
+  .card:hover::before{opacity:1}
+  .card .num{
+    font-family:var(--brush);font-size:2.3rem;color:rgba(184,137,43,.30);
+    position:absolute;top:.6rem;right:1rem;transition:.42s;
+  }
+  .card:hover .num{color:rgba(178,58,46,.42);transform:rotate(-8deg) scale(1.08)}
+  .card h3{font-size:1.12rem;margin-bottom:.5rem;letter-spacing:.04em}
+  .card h3 .ic{margin-right:.45rem}
+  .card p{font-size:.93rem;color:var(--ink-soft)}
+
+  /* ---------- 对照表 ---------- */
+  .maps{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.4rem}
+  .map-block{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1.4rem 1.5rem;backdrop-filter:blur(8px)}
+  .map-block h4{font-size:.95rem;letter-spacing:.2em;color:var(--gold);margin-bottom:.9rem;text-align:center}
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  td{padding:.5rem .2rem;border-bottom:1px dashed var(--line)}
+  tr:last-child td{border-bottom:none}
+  td.o{color:var(--ink-soft)}
+  td.arr{color:var(--gold-light);text-align:center;width:2.4em}
+  td.n{font-weight:600}
+  tbody tr{transition:.28s}
+  tbody tr:hover{background:rgba(217,180,92,.10)}
+
+  /* ---------- 使用方法 ---------- */
+  .steps{counter-reset:s;display:grid;gap:1rem;max-width:760px;margin:0 auto}
+  .step{
+    display:flex;gap:1.1rem;align-items:flex-start;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.15rem 1.3rem;
+    transition:.35s;
+  }
+  .step:hover{transform:translateX(6px);border-color:rgba(184,137,43,.45)}
+  .step::before{
+    counter-increment:s;content:counter(s,cjk-ideographic);
+    font-family:var(--brush);font-size:1.5rem;color:var(--cinnabar);
+    min-width:2.1rem;height:2.1rem;display:grid;place-items:center;
+    border:1px solid rgba(178,58,46,.28);border-radius:50%;flex:none;
+  }
+  .step h5{font-size:1rem;margin-bottom:.15rem}
+  .step p{font-size:.9rem;color:var(--ink-soft)}
+  code{
+    font-family:'Cascadia Code',Consolas,monospace;font-size:.85em;
+    background:rgba(34,48,63,.06);padding:.12em .45em;border-radius:5px;color:var(--cinnabar);
+    word-break:break-all;
+  }
+  .copybox{
+    margin-top:1.2rem;background:rgba(34,48,63,.05);border:1px dashed var(--line);
+    border-radius:12px;padding:1rem 1.2rem;font-family:'Cascadia Code',Consolas,monospace;
+    font-size:.85rem;color:var(--ink-soft);word-break:break-all;position:relative;
+  }
+  .warn{
+    margin-top:1.6rem;display:grid;gap:.5rem;font-size:.9rem;color:var(--ink-soft);
+    background:rgba(178,58,46,.06);border:1px solid rgba(178,58,46,.20);border-radius:14px;padding:1.1rem 1.3rem;
+  }
+  .warn b{color:var(--cinnabar)}
+
+  /* ---------- 致谢 ---------- */
+  .thanks{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem}
+  .tk{
+    display:flex;gap:.85rem;align-items:center;padding:1rem 1.15rem;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    text-decoration:none;color:inherit;transition:.38s cubic-bezier(.2,.8,.2,1);
+  }
+  .tk:hover{transform:translateY(-5px);box-shadow:0 14px 34px rgba(34,48,63,.13);border-color:rgba(184,137,43,.5)}
+  .tk .av{
+    width:40px;height:40px;border-radius:11px;flex:none;display:grid;place-items:center;
+    font-family:var(--brush);font-size:1.2rem;color:#fff;
+    background:linear-gradient(135deg,var(--ink-soft),var(--ink));
+  }
+  .tk.star .av{background:linear-gradient(135deg,var(--cinnabar),#8f2b21)}
+  .tk .t b{display:block;font-size:.95rem}
+  .tk .t span{font-size:.8rem;color:var(--ink-soft)}
+  .tk .role{margin-left:auto;font-size:.72rem;color:var(--gold);white-space:nowrap}
+
+  /* ---------- 页脚 ---------- */
+  footer{
+    position:relative;z-index:2;text-align:center;
+    padding:3rem 1.2rem 3.6rem;color:var(--ink-soft);font-size:.86rem;
+    border-top:1px solid var(--line);background:rgba(255,255,255,.4);
+  }
+  footer .brush{font-family:var(--brush);font-size:1.7rem;color:var(--ink);letter-spacing:.14em;margin-bottom:.5rem}
+  footer a{color:var(--gold);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+    .hero-inner>*{opacity:1}
+  }
+</style>
+</head>
+<body>
+
+<div class="fx" id="fx"></div>
+<div class="mist"></div>
+
+<nav class="nav" id="nav">
+  <a class="brand" href="#top">桃白簪花</a>
+  <a class="item" href="#intro">简介</a>
+  <a class="item" href="#features">四项增强</a>
+  <a class="item" href="#mapping">命名对照</a>
+  <a class="item" href="#usage">使用方法</a>
+  <a class="item" href="#thanks">致谢</a>
+  <a class="item" href="https://github.com/JokerXiaoMo/taobai-zanhua">GitHub ↗</a>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-inner">
+    <div class="seal"><i></i>TAOBAI · ZANHUA</div>
+    <h1 class="title">桃白<em>簪花</em></h1>
+    <div class="slogan">以桃为印 · <b>收存山河</b></div>
+    <p class="desc">
+      面向 <strong>mihomo / Clash Meta</strong> 内核的中式动漫长卷风配置覆写脚本，
+      将机场订阅覆写为一套标准功能名 / 服务名的策略组体系，并为「超稳定、超低延迟访问」做了四项增强。
+    </p>
+    <div class="badges">
+      <span class="badge">⛩ 内核 mihomo</span>
+      <span class="badge">📜 类型 覆写脚本</span>
+      <span class="badge">🍑 风格 中式动漫 · 长卷</span>
+      <span class="badge">🧩 基于 AIsouler/MyClash</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="#usage">展 卷 使 用</a>
+      <a class="btn ghost" href="https://github.com/JokerXiaoMo/taobai-zanhua">查 看 源 码</a>
+    </div>
+  </div>
+  <div class="scroll-hint">向下展卷<span></span></div>
+</header>
+
+<main>
+  <!-- 简介 -->
+  <section id="intro">
+    <div class="sec-head reveal">
+      <div class="cn">卷 首 简 介</div>
+      <div class="en">Introduction</div>
+      <div class="divider">❖</div>
+    </div>
+    <div class="intro-grid">
+      <div class="reveal">
+        <p class="lead">
+          <strong>「桃白簪花」</strong>是一份面向 mihomo（Clash Meta）内核的<strong>配置覆写脚本</strong>：
+          将机场订阅覆写为一套标准功能名 / 服务名命名的完整策略组体系，并针对
+          <strong>「超稳定、超低延迟访问各个 APP」</strong>做了四项增强。
+        </p>
+        <div class="quote">
+          🙏 本项目基于 <b>AIsouler/MyClash</b> 的 <code>mihomoScript.js</code> 微改而来——
+          分流逻辑、规则集与节点处理均出自原作者之手。本版在其基础上做了
+          <b>命名重塑</b>与<b>连接稳定性增强</b>，并重新设计了图标、文档与项目结构。
+        </div>
+      </div>
+      <div class="frame reveal">
+        <img src="assets/hero.webp" alt="桃白簪花 · 中式动漫主视觉">
+        <div class="cap">🌸 桃白簪花 · 主视觉</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 四项增强 -->
+  <section id="features">
+    <div class="sec-head reveal">
+      <div class="cn">四 项 增 强</div>
+      <div class="en">Four Enhancements</div>
+      <div class="divider">❖</div>
+    </div>
+    <div class="cards">
+      <div class="card reveal"><span class="num">壹</span>
+        <h3><span class="ic">🔎</span>sniffer 域名嗅探</h3>
+        <p>TLS / HTTP 域名嗅探，分流更精准；QUIC 被拦截时自动回落 TCP，视频、语音不断流。</p>
+      </div>
+      <div class="card reveal"><span class="num">贰</span>
+        <h3><span class="ic">🔒</span>TLS 指纹统一</h3>
+        <p>逐节点 <code>client-fingerprint: chrome</code>，降低 CDN 风控拦截概率，连接更稳（全局写法已被 mihomo 废弃，按官方推荐逐节点下发）。</p>
+      </div>
+      <div class="card reveal"><span class="num">叁</span>
+        <h3><span class="ic">🔗</span>30s 空闲保活</h3>
+        <p><code>keep-alive-interval</code> 与 <code>keep-alive-idle</code> 均 30s（mihomo 官方字段），NAT 映射不易失效，减少重连与延迟抖动。</p>
+      </div>
+      <div class="card reveal"><span class="num">肆</span>
+        <h3><span class="ic">🌸</span>「自动选择」组</h3>
+        <p>50ms 容差 url-test 实时测速，始终自动切换最低延迟线路。</p>
+      </div>
+    </div>
+    <p class="reveal" style="text-align:center;margin-top:2rem;color:var(--ink-soft);font-size:.94rem">
+      此外完整继承原脚本招牌能力：动态地区策略组 · 倍率识别 · 私有 DNS / hosts 修复 · 自定义节点 · 链式代理
+    </p>
+  </section>
+
+  <!-- 命名对照 -->
+  <section id="mapping">
+    <div class="sec-head reveal">
+      <div class="cn">命 名 对 照</div>
+      <div class="en">Naming Map</div>
+      <div class="divider">❖</div>
+    </div>
+    <p class="reveal" style="text-align:center;margin:-.4rem 0 1.8rem;color:var(--ink-soft);font-size:.9rem">
+      2026-09 起命名重做：<b>左为旧卷名，右为脚本当前标准组名</b>——面板所见即标准名，不再靠意象猜谜。
+    </p>
+    <div class="maps">
+      <div class="map-block reveal">
+        <h4>基础策略组</h4>
+        <table><tbody>
+          <tr><td class="o">🖐️ 拾印 | 手动</td><td class="arr">➜</td><td class="n">手动选择</td></tr>
+          <tr><td class="o">🌸 寻花 | 自动</td><td class="arr">➜</td><td class="n">自动选择</td></tr>
+          <tr><td class="o">🍃 分花 | 均衡</td><td class="arr">➜</td><td class="n">负载均衡</td></tr>
+          <tr><td class="o">🍑 桃印 | 总卷</td><td class="arr">➜</td><td class="n">桃白簪花 · 主控</td></tr>
+          <tr><td class="o">🏠 归檐 | 直连</td><td class="arr">➜</td><td class="n">直连</td></tr>
+          <tr><td class="o">🌙 拾遗 | 兜底</td><td class="arr">➜</td><td class="n">兜底</td></tr>
+          <tr><td class="o">🌌 御风 | 断流</td><td class="arr">➜</td><td class="n">QUIC 断流闸</td></tr>
+        </tbody></table>
+      </div>
+      <div class="map-block reveal">
+        <h4>地区与倍率</h4>
+        <table><tbody>
+          <tr><td class="o">🏮 灯 | 香江</td><td class="arr">➜</td><td class="n">🇨🇳 中国香港</td></tr>
+          <tr><td class="o">🗺️ 濠镜</td><td class="arr">➜</td><td class="n">🇨🇳 中国澳门</td></tr>
+          <tr><td class="o">📜 卷 | 宝岛</td><td class="arr">➜</td><td class="n">🇨🇳 中国台湾</td></tr>
+          <tr><td class="o">🖌️ 砚 | 东瀛</td><td class="arr">➜</td><td class="n">🇯🇵 日本</td></tr>
+          <tr><td class="o">☁️ 羽 | 花旗</td><td class="arr">➜</td><td class="n">🇺🇸 美国</td></tr>
+          <tr><td class="o">🧣 绫 | 狮城</td><td class="arr">➜</td><td class="n">🇸🇬 新加坡</td></tr>
+          <tr><td class="o">⚖️ 轻羽·低倍</td><td class="arr">➜</td><td class="n">低倍率节点</td></tr>
+          <tr><td class="o">🔥 重岳·高倍</td><td class="arr">➜</td><td class="n">高倍率节点</td></tr>
+        </tbody></table>
+      </div>
+      <div class="map-block reveal">
+        <h4>分流策略组（节选）</h4>
+        <table><tbody>
+          <tr><td class="o">✈️ 飞书·电报</td><td class="arr">➜</td><td class="n">Telegram</td></tr>
+          <tr><td class="o">🎬 映画·油管</td><td class="arr">➜</td><td class="n">YouTube</td></tr>
+          <tr><td class="o">🎞️ 映雪·奈飞</td><td class="arr">➜</td><td class="n">Netflix</td></tr>
+          <tr><td class="o">🎮 雾阁·蒸汽</td><td class="arr">➜</td><td class="n">Steam</td></tr>
+          <tr><td class="o">🎧 韶音·声乐</td><td class="arr">➜</td><td class="n">Spotify</td></tr>
+          <tr><td class="o">🚫 掩扉 | 拦截</td><td class="arr">➜</td><td class="n">广告拦截</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 使用方法 -->
+  <section id="usage">
+    <div class="sec-head reveal">
+      <div class="cn">展 卷 之 法</div>
+      <div class="en">Usage</div>
+      <div class="divider">❖</div>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div><h5>复制脚本直链</h5><p>在支持「链接覆写 / 远程脚本」的客户端中直接填入下方地址。</p></div>
+      </div>
+      <div class="step reveal">
+        <div><h5>或在 Clash Verge Rev 中粘贴</h5><p>订阅列表 → 右键机场订阅 → <b>编辑脚本</b>，粘贴 <code>Script/taobai-zanhua.js</code> 全文保存。</p></div>
+      </div>
+      <div class="step reveal">
+        <div><h5>关闭客户端 DNS 覆写</h5><p>设置 → DNS 覆写关闭，交给脚本接管，避免冲突。</p></div>
+      </div>
+      <div class="step reveal">
+        <div><h5>重新激活订阅</h5><p>即可看到全套标准命名策略组。Bettbox 用户可直接图形化开关各项功能。</p></div>
+      </div>
+    </div>
+    <div class="copybox reveal" id="rawBox">
+      https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/taobai-zanhua.js
+      <button id="copyBtn" style="position:absolute;top:.5rem;right:.7rem;border:none;background:none;color:var(--gold);cursor:pointer;font-size:.8rem;letter-spacing:.1em">复制</button>
+    </div>
+    <div class="warn reveal">
+      <div><b>⚠ 注意</b>：仅用于<b>机场提供的订阅配置文件</b>进行覆写，勿用于自行编写的配置。</div>
+      <div>需<b>关闭代理软件自带的 DNS 覆写功能</b>，避免与脚本生成的 DNS 配置冲突。</div>
+    </div>
+  </section>
+
+  <!-- 致谢 -->
+  <section id="thanks">
+    <div class="sec-head reveal">
+      <div class="cn">卷 末 谢 意</div>
+      <div class="en">Acknowledgements</div>
+      <div class="divider">❖</div>
+    </div>
+    <div class="thanks">
+      <a class="tk star reveal" href="https://github.com/AIsouler/MyClash" target="_blank" rel="noopener">
+        <span class="av">原</span><span class="t"><b>AIsouler/MyClash</b><span>原脚本作者</span></span><span class="role">⭐ 必谢</span>
+      </a>
+      <a class="tk reveal" href="https://github.com/MetaCubeX/mihomo" target="_blank" rel="noopener">
+        <span class="av">核</span><span class="t"><b>MetaCubeX/mihomo</b><span>强大的代理内核</span></span>
+      </a>
+      <a class="tk reveal" href="https://github.com/appshubcc/bett-rules" target="_blank" rel="noopener">
+        <span class="av">规</span><span class="t"><b>appshubcc/bett-rules</b><span>主要规则集来源</span></span><span class="role">40 处</span>
+      </a>
+      <a class="tk reveal" href="https://github.com/JokerXiaoMo/taobai-zanhua/tree/main/Icons" target="_blank" rel="noopener">
+        <span class="av">图</span><span class="t"><b>本项目自研 · 簪花印</b><span>全部策略组图标（38 枚 SVG，存于 Icons/）</span></span><span class="role">44 处</span>
+      </a>
+      <a class="tk reveal" href="https://github.com/666OS/rules" target="_blank" rel="noopener">
+        <span class="av">规</span><span class="t"><b>666OS/rules</b><span>Emby 域名规则</span></span><span class="role">1 处</span>
+      </a>
+      <a class="tk reveal" href="https://github.com/binaryu/emos-proxy-rule" target="_blank" rel="noopener">
+        <span class="av">规</span><span class="t"><b>binaryu/emos-proxy-rule</b><span>Emby 规则补充</span></span><span class="role">1 处</span>
+      </a>
+      <a class="tk reveal" href="https://github.com/217heidai/adblockfilters" target="_blank" rel="noopener">
+        <span class="av">拦</span><span class="t"><b>217heidai/adblockfilters</b><span>广告过滤规则</span></span><span class="role">1 处</span>
+      </a>
+      <a class="tk reveal" href="https://github.com/appshubcc/Bettbox" target="_blank" rel="noopener">
+        <span class="av">客</span><span class="t"><b>appshubcc/Bettbox</b><span>友情推荐 · 轻量省电客户端</span></span>
+      </a>
+      <a class="tk reveal" href="https://github.com/Zephyruso/zashboard" target="_blank" rel="noopener">
+        <span class="av">板</span><span class="t"><b>Zephyruso/zashboard</b><span>控制面板</span></span>
+      </a>
+    </div>
+    <p class="reveal" style="text-align:center;margin-top:1.6rem;font-size:.86rem;color:var(--ink-soft)">
+      另有 DNS 服务来自 阿里 DNS（223.5.5.5）· 腾讯 DNSPod（119.29.29.29 / 1.12.12.12）· Cloudflare · Google，
+      <code>cn-additional-list</code> 规则来自 static-file-global.353355.xyz，一并致谢。
+    </p>
+  </section>
+</main>
+
+<footer>
+  <div class="brush">簪花一树 · 与君同行</div>
+  <p>本项目仅供学习与研究网络技术使用，不提供任何节点 / 订阅，也不承载任何流量。请遵守所在地区的法律法规。</p>
+  <p style="margin-top:.5rem">脚本修改版著作权归属原作者 <a href="https://github.com/AIsouler/MyClash">AIsouler</a> · 文档与项目结构以 <a href="https://github.com/JokerXiaoMo/taobai-zanhua/blob/main/LICENSE">MIT</a> 协议开源</p>
+</footer>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fx = document.getElementById('fx');
+
+  /* 花瓣 */
+  var PETALS = reduce ? 0 : 26;
+  for(var i=0;i<PETALS;i++){
+    var p=document.createElement('i');p.className='petal';
+    var s=5+Math.random()*9;
+    p.style.cssText='left:'+(Math.random()*100)+'vw;width:'+s+'px;height:'+(s*.72)+'px;'+
+      'animation-duration:'+(9+Math.random()*11)+'s;animation-delay:-'+(Math.random()*18)+'s;'+
+      'opacity:'+(.4+Math.random()*.45);
+    fx.appendChild(p);
+  }
+  /* 光尘 */
+  var MOTES = reduce ? 0 : 22;
+  for(var j=0;j<MOTES;j++){
+    var m=document.createElement('i');m.className='mote';
+    var r=2+Math.random()*3.5;
+    m.style.cssText='left:'+(Math.random()*100)+'vw;width:'+r+'px;height:'+r+'px;'+
+      'animation-duration:'+(11+Math.random()*15)+'s;animation-delay:-'+(Math.random()*20)+'s';
+    fx.appendChild(m);
+  }
+
+  /* 导航显隐 */
+  var nav=document.getElementById('nav');
+  addEventListener('scroll',function(){nav.classList.toggle('show',scrollY>innerHeight*.55)},{passive:true});
+
+  /* 滚动渐显 */
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
+  },{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el,i){
+    el.style.transitionDelay=(i%4)*90+'ms';io.observe(el);
+  });
+
+  /* Hero 视差 */
+  var bg=document.getElementById('heroBg');
+  if(!reduce){
+    addEventListener('mousemove',function(e){
+      var x=(e.clientX/innerWidth-.5)*14, y=(e.clientY/innerHeight-.5)*10;
+      bg.style.transform='translate3d('+x+'px,'+y+'px,0)';
+    },{passive:true});
+  }
+
+  /* 复制 */
+  var btn=document.getElementById('copyBtn');
+  btn.addEventListener('click',function(){
+    var t='https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/taobai-zanhua.js';
+    (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){
+      btn.textContent='已复制 ✓';setTimeout(function(){btn.textContent='复制'},1800);
+    }).catch(function(){btn.textContent='请手动复制'});
+  });
+})();
+</script>
+</body>
+</html>
