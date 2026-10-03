@@ -302,10 +302,9 @@ taobai-zanhua
 
 **📜 规则集**
 
-- [appshubcc/bett-rules](https://github.com/appshubcc/bett-rules) —— **主要规则集来源**（引用 40 处）
+- [appshubcc/bett-rules](https://github.com/appshubcc/bett-rules) —— **主要规则集来源**（引用 43 处）
 - [666OS/rules](https://github.com/666OS/rules) —— Emby 域名规则（1 处）
 - [binaryu/emos-proxy-rule](https://github.com/binaryu/emos-proxy-rule) —— Emby 规则补充（1 处）
-- [217heidai/adblockfilters](https://github.com/217heidai/adblockfilters) —— 广告过滤规则（1 处）
 - `cn-additional-list` 国内补充规则 —— 来自 `static-file-global.353355.xyz`（1 处）
 
 **🎨 策略组图标**
