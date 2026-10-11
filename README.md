@@ -71,7 +71,7 @@
 - 🔄 根据节点名称**动态生成地区策略组**（自动补全国旗、剔除信息节点）
 - ⚖️ 自动识别**低倍率 / 高倍率**节点并归类
 - 🩹 自动解决机场**私有 DNS / hosts 映射**导致的节点域名解析问题（hosts 改写进节点 server），DNS 无泄露
-- 🧩 支持**自定义节点**（自动生成「自建节点」组）与**链式代理**（自定义节点作落地、经「链式中转」中转）
+- 🧩 支持**自定义节点**（自动生成「自建节点」组，可作为独立出口直连使用）
 - 🚫 可选屏蔽国外 QUIC、过滤高倍率 / 非地区节点、IPv4 / IPv6 优先
 
 ---
@@ -123,8 +123,7 @@
 | **低倍率节点** | 自动识别低倍率节点并归池 |
 | **高倍率节点** | 自动识别高倍率节点并归池 |
 | **其他节点** | 未匹配到任何地区的节点 |
-| **自建节点** | 由 `customizeProxies` 定义；**启用链式代理时该组自动更名为「链式落地」** |
-| **链式中转** | 链式代理的中转组（自定义节点的 `dialer-proxy` 指向它） |
+| **自建节点** | 由 `customizeProxies` 定义；与订阅节点重名时自动加「自建-」前缀 |
 
 ### 六、分卷 · 服务组
 
@@ -151,6 +150,7 @@
 | PikPak | **PikPak** | `pikpak.svg` |
 | 加密货币 | **加密货币** | `crypto.svg` |
 | PayPal | **PayPal** | `paypal.svg` |
+| Patreon | **Patreon** | `patreon.svg` |
 | E-Hentai | **E-Hentai** | `ehentai.svg` |
 | 广告拦截 | **广告拦截** | `adblock.svg` |
 
@@ -183,10 +183,10 @@
 - **地区图标**：严格按真实国旗绘制——港澳台统一**五星红旗**；日本日章旗、美国星条旗、新加坡星月旗
 - **服务图标**：按各品牌 / 站点的**识别图形**绘制（粉底白符），如 YouTube 播放框、Spotify 三道声弧、Telegram 纸飞机、Steam 曲柄阀
 
-脚本中 45 处图标引用**全部指向本仓库**，经 jsDelivr 分发：
+脚本中 45 处图标引用**全部指向本仓库**，经 JSDMirror 分发：
 
 ```
-https://fastly.jsdelivr.net/gh/JokerXiaoMo/taobai-zanhua@main/Icons/youtube.svg
+https://cdn.jsdmirror.com/gh/JokerXiaoMo/taobai-zanhua@main/Icons/youtube.svg
 ```
 
 > 想换自己的图标？把 SVG 传进你的仓库，替换 `Icons/` 前缀即可——脚本中所有图标都是完整 URL，搜 `Icons/` 一览无余。
@@ -205,7 +205,7 @@ https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/taobai-z
 
 > 若 `raw.githubusercontent.com` 无法直连，可改用加速前缀：
 > ```
-> https://fastly.jsdelivr.net/gh/JokerXiaoMo/taobai-zanhua@main/Script/taobai-zanhua.js
+> https://cdn.jsdmirror.com/gh/JokerXiaoMo/taobai-zanhua@main/Script/taobai-zanhua.js
 > ```
 
 ### Clash Verge Rev（覆写方式）
@@ -257,9 +257,8 @@ https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/taobai-z
 | `过滤低倍率节点` / `过滤高倍率节点` / `过滤非地区节点` | 节点过滤 |
 | `屏蔽国外QUIC` | 「QUIC 断流闸」的初始默认档：true=REJECT 拦截 / false=PASS-RULE 放行（面板可随时切档） |
 | `代理IPV4优先` / `代理IPV6优先` | 节点 IP 栈偏好（二者只开一个） |
-| `链式代理` | 自定义节点作为落地，经「链式中转」中转（组名同时变为「链式落地」） |
 | `净泉真假分明` | fake-ip 规则化：直连域名 real-ip、其余 fake-ip；关闭回退旧写法 |
-| 各分流组（`YouTube`、`Google FCM` 等 20 项） | 关闭后该策略组与对应规则整体移除 |
+| 各分流组（`YouTube`、`Google FCM` 等 21 项） | 关闭后该策略组与对应规则整体移除 |
 
 ---
 
@@ -289,7 +288,7 @@ taobai-zanhua
 
 **⭐ 原脚本作者**
 
-- **[AIsouler/MyClash](https://github.com/AIsouler/MyClash)** —— 本项目的根基。覆写脚本基于其 `mihomoScript.js` 微改而来：节点过滤与地区归组、机场私有 DNS / hosts 修复、倍率识别、链式代理等核心能力均出自原作者之手，桃白簪花不过是在巨人的肩上簪了一枝花。**强烈建议去给原项目点一个 Star。**
+- **[AIsouler/MyClash](https://github.com/AIsouler/MyClash)** —— 本项目的根基。覆写脚本基于其 `mihomoScript.js` 微改而来：节点过滤与地区归组、机场私有 DNS / hosts 修复、倍率识别、节点归组等核心能力均出自原作者之手，桃白簪花不过是在巨人的肩上簪了一枝花。**强烈建议去给原项目点一个 Star。**
 
 **🧠 内核与客户端**
 
@@ -302,7 +301,7 @@ taobai-zanhua
 
 **📜 规则集**
 
-- [appshubcc/bett-rules](https://github.com/appshubcc/bett-rules) —— **主要规则集来源**（引用 43 处）
+- [appshubcc/bett-rules](https://github.com/appshubcc/bett-rules) —— **主要规则集来源**（引用 44 处）
 - [666OS/rules](https://github.com/666OS/rules) —— Emby 域名规则（1 处）
 - [binaryu/emos-proxy-rule](https://github.com/binaryu/emos-proxy-rule) —— Emby 规则补充（1 处）
 - `cn-additional-list` 国内补充规则 —— 来自 `static-file-global.353355.xyz`（1 处）
@@ -310,6 +309,10 @@ taobai-zanhua
 **🎨 策略组图标**
 
 - **本项目自研**「簪花印」图标体系（39 枚 SVG，见 [`Icons/`](Icons)）：桃粉渐变底 + 白色简笔符号；地区图标按真实国旗绘制，服务图标按各品牌识别图形绘制。早期版本曾引用 [Koolson/Qure](https://github.com/Koolson/Qure)、[MiToverG422/Qure](https://github.com/MiToverG422/Qure)、[lige47/QuanX-icon-rule](https://github.com/lige47/QuanX-icon-rule) 等图标集，现已全部替换为自研图标，在此一并致谢其启发
+
+**🔗 CDN 分发**
+
+- [jsdmirror/JSDMirror](https://github.com/jsdmirror/JSDMirror) —— 本项目全部图标与规则集经 `cdn.jsdmirror.com` 加速分发（同步自上游 [AIsouler/MyClash](https://github.com/AIsouler/MyClash) 的 CDN 切换）
 
 **🖥 面板**
 
