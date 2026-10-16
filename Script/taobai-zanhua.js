@@ -983,6 +983,9 @@ function createRegionGroup(name, icon, proxies) {
         name,
         icon,
         proxies: [...proxies, urlTestName],
+        // 新导入默认落在「XX · 自动」档（url-test 实时测速），
+        // store-selected 会记住之后的手动选择，优先级高于此默认值
+        'default-selected': urlTestName,
         hidden: hideManualSelectGroupEnabled,
       },
     ];
