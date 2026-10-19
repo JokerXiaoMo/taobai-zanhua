@@ -145,6 +145,7 @@
 | 服务 | 组名 | 图标 |
 | :--- | :--- | :--- |
 | Microsoft | **Microsoft** | `microsoft.svg` |
+| GitHub | **GitHub** | `github.svg` |
 | Apple | **Apple** | `apple.svg` |
 | 国外 AI | **AI 服务** | `ai.svg` |
 | PikPak | **PikPak** | `pikpak.svg` |
@@ -178,7 +179,7 @@
 | 尺寸 | 48 × 48，圆角 13 |
 | 底 | 桃粉渐变 `#F0A8C0` → `#E58BA8`，外描边 `#E58BA8` |
 | 符 | 白色简笔符号，一眼可辨 |
-| 数量 | 39 枚 SVG，全部存放于本仓库 [`Icons/`](Icons) |
+| 数量 | 40 枚 SVG，全部存放于本仓库 [`Icons/`](Icons) |
 
 - **地区图标**：严格按真实国旗绘制——港澳台统一**五星红旗**；日本日章旗、美国星条旗、新加坡星月旗
 - **服务图标**：按各品牌 / 站点的**识别图形**绘制（粉底白符），如 YouTube 播放框、Spotify 三道声弧、Telegram 纸飞机、Steam 曲柄阀

@@ -38,7 +38,7 @@ const Compatible_With_Bettbox = { ruleOptionsEnable: true };
  * 【地区】🇨🇳 中国香港　🇨🇳 中国澳门　🇨🇳 中国台湾　🇯🇵 日本　🇺🇸 美国　🇸🇬 新加坡
  *         低倍率节点 / 高倍率节点 / 其他节点
  * 【自建】自建节点
- * 【服务】Google FCM / YouTube / Google / AI 服务 / Microsoft / Apple / Telegram / Steam
+ * 【服务】Google FCM / YouTube / Google / AI 服务 / GitHub / Microsoft / Apple / Telegram / Steam
  *         TikTok / Twitter / Meta / LINE / Netflix / Emby / PikPak / Spotify / 加密货币 / E-Hentai
  *
  * 「桃白簪花」主题落点（主题不丢，但不再谜语人）：
@@ -74,6 +74,7 @@ const ruleOptionsEnable = {
   'YouTube': true, // YouTube 视频
   'Google': true, // Google 服务
   'AI 服务': true, // 国外 AI 服务
+  'GitHub': true, // GitHub 代码托管平台
   'Microsoft': true, // Microsoft 服务
   'Apple': true, // Apple 服务
   'Telegram': true, // Telegram 通讯
@@ -111,6 +112,9 @@ const ruleOptionsEnable = {
 
 // 定义前置规则
 const prefixRules = [
+  // 规则集下载域名，避免出现鸡蛋问题
+  'DOMAIN,cdn.jsdmirror.com,直连',
+
   // 私有网络 → 直连
   'RULE-SET,private,直连',
 
@@ -234,7 +238,7 @@ const rateRegionDefinitions = [
   {
     name: lowRateRegionName,
     regex:
-      /^(?!.*(?:剩|期)).*(?:(?<!\d)0(\.[0-5]|[*×✕✖⨉x倍]))|(?:[*×✕✖⨉x]0)|^(?!.*(?:客户端|软件)).*下载|低倍|免费|(?<![A-Za-z])free(?![A-Za-z])/i,
+      /^(?!.*(?:剩|期)).*(?:(?<![\d.])0(\.[0-5]|[*×✕✖⨉x倍]))|(?:[*×✕✖⨉x]0)|^(?!.*(?:客户端|软件)).*下载|低倍|免费|(?<![A-Za-z])free(?![A-Za-z])/i,
     icon: 'https://cdn.jsdmirror.com/gh/JokerXiaoMo/taobai-zanhua@main/Icons/low-rate.svg',
   },
   {
@@ -485,9 +489,8 @@ const serviceConfigs = [
     rules: ['RULE-SET,ai,AI 服务'],
   },
   {
-    name: 'Microsoft',
+    name: 'GitHub',
     baseOption: selectBaseOption,
-    direct: true,
     providers: {
       github: {
         ...ruleProviderCommonDomain,
@@ -495,6 +498,15 @@ const serviceConfigs = [
         path: './ruleset/github.mrs',
         'path-in-bundle': 'geo/geosite/github.mrs',
       },
+    },
+    icon: 'https://cdn.jsdmirror.com/gh/JokerXiaoMo/taobai-zanhua@main/Icons/github.svg',
+    rules: ['RULE-SET,github,GitHub'],
+  },
+  {
+    name: 'Microsoft',
+    baseOption: selectBaseOption,
+    direct: true,
+    providers: {
       microsoft: {
         ...ruleProviderCommonDomain,
         url: 'https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/geosite/microsoft.mrs',
@@ -509,7 +521,7 @@ const serviceConfigs = [
       },
     },
     icon: 'https://cdn.jsdmirror.com/gh/JokerXiaoMo/taobai-zanhua@main/Icons/microsoft.svg',
-    rules: ['RULE-SET,github,桃白簪花 · 主控', 'RULE-SET,microsoft,Microsoft', 'RULE-SET,microsoft_ip,Microsoft,no-resolve'],
+    rules: ['RULE-SET,microsoft,Microsoft', 'RULE-SET,microsoft_ip,Microsoft,no-resolve'],
   },
   {
     name: 'Apple',
@@ -825,6 +837,23 @@ Compatible_With_Bettbox.policyGroupOptions = serviceConfigs.map((svc) => svc.nam
 // ---节点过滤、重命名及验证---
 
 /**
+ * 零宽/不可见字符：部分机场会在节点名中逐字符插入这类字符（如 H\u200BK），会打断地区、倍率等正则匹配。
+ *
+ * 刻意排除三类「有语义」的字符，避免误伤：
+ * - U+200C / U+200D（ZWNJ / ZWJ）：参与连字与 emoji 组合，删掉会改变字形；
+ * - U+FE00–U+FE0F 及 U+E0100–U+E01EF（变体选择符）：控制 emoji 呈现方式。
+ * 其余零宽/不可见字符不含任何语义，只用于干扰匹配，可安全忽略。
+ */
+const invisibleCharsRegex = /[\u00AD\u180E\u200B\u200E\u200F\u202A-\u202E\u2060-\u206F\uFEFF\u115F\u1160\u3164\uFFA0]/g;
+
+/**
+ * 取节点名「可用于匹配」的形式：剥离零宽/不可见字符
+ */
+function toMatchableName(name) {
+  return typeof name === 'string' ? name.replace(invisibleCharsRegex, '') : name;
+}
+
+/**
  * 节点匹配缓存，避免重复执行正则
  */
 const regionMatchCache = new Map();
@@ -833,7 +862,8 @@ function getMatchedRegions(proxyName) {
     return regionMatchCache.get(proxyName);
   }
 
-  const regions = allRegionDefinitions.filter((region) => region.regex.test(proxyName));
+  const matchableName = toMatchableName(proxyName);
+  const regions = allRegionDefinitions.filter((region) => region.regex.test(matchableName));
   regionMatchCache.set(proxyName, regions);
 
   return regions;
@@ -919,13 +949,15 @@ function filterAndNormalizeProxies(config) {
     const type = String(proxy.type ?? '').toLowerCase();
     if (type === 'direct' || type === 'reject' || type === 'rematch') return false;
 
-    if (lowRateRegex?.test(proxy.name) || highRateRegex?.test(proxy.name)) return false;
+    const matchableName = toMatchableName(proxy.name);
+
+    if (lowRateRegex?.test(matchableName) || highRateRegex?.test(matchableName)) return false;
 
     if (!filterNonRegionProxiesEnabled) return true;
 
     const isRegionProxy = getMatchedRegions(proxy.name).some((region) => regionDefinitions.includes(region));
 
-    return isRegionProxy || !excludeFilter.test(proxy.name);
+    return isRegionProxy || !excludeFilter.test(matchableName);
   });
 
   const renameMap = new Map();
