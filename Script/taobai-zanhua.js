@@ -1014,9 +1014,9 @@ function createRegionGroup(name, icon, proxies) {
         ...selectBaseOption,
         name,
         icon,
-        proxies: [...proxies, urlTestName],
-        // 新导入默认落在「XX · 自动」档（url-test 实时测速），
-        // store-selected 会记住之后的手动选择，优先级高于此默认值
+        // 「· 自动」置于首位：内核在 default-selected 缺失/不被客户端识别时，
+        // 默认选中 proxies 第一项 —— 双重保险，新导入必落自动档
+        proxies: [urlTestName, ...proxies],
         'default-selected': urlTestName,
         hidden: hideManualSelectGroupEnabled,
       },
