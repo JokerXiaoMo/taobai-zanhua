@@ -137,21 +137,37 @@ FCM · YouTube · Google · AI · GitHub · Microsoft · Apple · Telegram · St
 
 ![五步完成导入](Image/import-guide.svg)
 
-**脚本直链**
+下面每条链接各占一行，每行右上角有独立的复制按钮，点一次只复制这一条，不会把两条一起粘进去。
 
-```
-https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/mihomoScript.js
-https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/Script.js
-```
+### 全量版（功能最全）
 
-**配置直链**
+**成品配置 · 全量**
 
 ```
 https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Config/mihomoConfig.yaml
+```
+
+**覆写脚本 · 全量**（配合你自己的机场订阅使用）
+
+```
+https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/mihomoScript.js
+```
+
+### 精简版（只留常用分流，配置更短）
+
+**成品配置 · 精简**
+
+```
 https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Config/mihomoConfigLite.yaml
 ```
 
-脚本用于覆写你手上的机场订阅，请勿用它去覆写手写的配置。导入后记得关掉客户端的 DNS 覆写选项，否则 DNS 分流会被客户端接管，和配置里的设定打架。
+**覆写脚本 · 精简**（配合你自己的机场订阅使用）
+
+```
+https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/Script.js
+```
+
+> 怎么选：成品配置直接导入即用；覆写脚本用于覆写你手上的机场订阅，请勿用它去覆写手写的配置。导入后记得关掉客户端的 DNS 覆写选项，否则 DNS 分流会被客户端接管，和配置里的设定打架。
 
 ---
 
