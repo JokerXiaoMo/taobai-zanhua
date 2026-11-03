@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" width="1200" height="360" role="img" aria-label="桃白簪花 · 五步导入流程">
+  <defs>
+    <linearGradient id="chip" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F0A8C0"/>
+      <stop offset="1" stop-color="#E58BA8"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0.5" y="0.5" width="1199" height="359" rx="22" fill="#FFFCFD" stroke="#F2DCE6"/>
+
+  <g font-family="PingFang SC, Microsoft YaHei, Hiragino Sans GB, system-ui, sans-serif">
+    <text x="48" y="58" font-size="22" font-weight="700" fill="#6E3448">五步完成导入</text>
+    <text x="48" y="84" font-size="13" fill="#A98A96">以支持脚本覆写的客户端为例，全量与精简版本步骤相同</text>
+    <line x1="48" y1="98" x2="1152" y2="98" stroke="#F6E3EB"/>
+
+    <!-- 步骤 1 -->
+    <rect x="44" y="118" width="208" height="150" rx="16" fill="#FFFFFF" stroke="#F2D9E4"/>
+    <circle cx="78" cy="152" r="15" fill="url(#chip)"/>
+    <text x="78" y="157" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">1</text>
+    <text x="102" y="158" font-size="15" font-weight="700" fill="#6E3448">新建配置</text>
+    <line x1="64" y1="178" x2="232" y2="178" stroke="#F6E3EB"/>
+    <text x="68" y="208" font-size="12" fill="#8A6B77">进入客户端「配置」页</text>
+    <text x="68" y="232" font-size="12" fill="#8A6B77">点右上角「＋」新建</text>
+
+    <!-- 步骤 2 -->
+    <rect x="270" y="118" width="208" height="150" rx="16" fill="#FFFFFF" stroke="#F2D9E4"/>
+    <circle cx="304" cy="152" r="15" fill="url(#chip)"/>
+    <text x="304" y="157" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">2</text>
+    <text x="328" y="158" font-size="15" font-weight="700" fill="#6E3448">选择类型</text>
+    <line x1="290" y1="178" x2="458" y2="178" stroke="#F6E3EB"/>
+    <text x="294" y="208" font-size="12" fill="#8A6B77">创建时类型选「脚本」</text>
+    <text x="294" y="232" font-size="12" fill="#8A6B77">不要选远程配置</text>
+
+    <!-- 步骤 3 -->
+    <rect x="496" y="118" width="208" height="150" rx="16" fill="#FFFFFF" stroke="#F2D9E4"/>
+    <circle cx="530" cy="152" r="15" fill="url(#chip)"/>
+    <text x="530" y="157" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">3</text>
+    <text x="554" y="158" font-size="15" font-weight="700" fill="#6E3448">粘贴直链</text>
+    <line x1="516" y1="178" x2="684" y2="178" stroke="#F6E3EB"/>
+    <text x="520" y="208" font-size="12" fill="#8A6B77">在「通过 URL 导入」中</text>
+    <text x="520" y="232" font-size="12" fill="#8A6B77">填入下方脚本直链</text>
+
+    <!-- 步骤 4 -->
+    <rect x="722" y="118" width="208" height="150" rx="16" fill="#FFFFFF" stroke="#F2D9E4"/>
+    <circle cx="756" cy="152" r="15" fill="url(#chip)"/>
+    <text x="756" y="157" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">4</text>
+    <text x="780" y="158" font-size="15" font-weight="700" fill="#6E3448">保存启用</text>
+    <line x1="742" y1="178" x2="910" y2="178" stroke="#F6E3EB"/>
+    <text x="746" y="208" font-size="12" fill="#8A6B77">命名后保存，切换</text>
+    <text x="746" y="232" font-size="12" fill="#8A6B77">到该配置即生效</text>
+
+    <!-- 步骤 5 -->
+    <rect x="948" y="118" width="208" height="150" rx="16" fill="#FFFFFF" stroke="#F2D9E4"/>
+    <circle cx="982" cy="152" r="15" fill="url(#chip)"/>
+    <text x="982" y="157" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">5</text>
+    <text x="1006" y="158" font-size="15" font-weight="700" fill="#6E3448">随时更新</text>
+    <line x1="968" y1="178" x2="1136" y2="178" stroke="#F6E3EB"/>
+    <text x="972" y="208" font-size="12" fill="#8A6B77">配置菜单点「更新」</text>
+    <text x="972" y="232" font-size="12" fill="#8A6B77">无需重新导入</text>
+
+    <!-- 连接箭头 -->
+    <g fill="none" stroke="#E8B9C9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M262 185 L271 195 L262 205"/>
+      <path d="M488 185 L497 195 L488 205"/>
+      <path d="M714 185 L723 195 L714 205"/>
+      <path d="M940 185 L949 195 L940 205"/>
+    </g>
+
+    <!-- 底部提示 -->
+    <rect x="44" y="290" width="1112" height="42" rx="12" fill="#FDF1F6"/>
+    <circle cx="70" cy="311" r="4" fill="#E58BA8"/>
+    <text x="86" y="316" font-size="12.5" fill="#9A6C7D">导入或覆写后，请在客户端关闭 DNS 覆写功能，否则分流与节点解析可能不符合预期。</text>
+  </g>
+</svg>
