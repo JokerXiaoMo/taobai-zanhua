@@ -13,6 +13,8 @@
 
 > 本仓库只提供配置与脚本，不提供、不存储、不分发任何订阅链接或节点信息。
 
+> 脚本与配置取自 [AIsouler/MyClash](https://github.com/AIsouler/MyClash)（MIT 协议），本仓库仅替换了策略组图标。逐项出处见文末「来源与授权」，致谢见「特别鸣谢」，使用范围见「特别说明」。
+
 ---
 
 ## 它想解决的四件事
@@ -241,6 +243,45 @@ https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/Script.j
 - 40 枚图标、`Image/` 下的示意图，以及本文档的文字，均为本项目原创，随仓库一同以 MIT 协议提供。
 - 仓库内不含任何客户端截图、他人图片或第三方素材；示意图全部是矢量自绘。
 - 可自由使用、修改、再分发，保留 `LICENSE` 中的版权声明即可。
+
+### 哪些内容取自原作者
+
+同步基线为上游提交 [`b0ea9e4`](https://github.com/AIsouler/MyClash/commit/b0ea9e41ec6700a7ac4c4e1cb7b7ed0c2b9a1c1a)（2026-11-05）。除图标外，下列内容全部来自原作者：
+
+| 路径 | 说明 |
+| --- | --- |
+| `Script/mihomoScript.js`、`Script/Script.js` | 覆写脚本的全部逻辑、注释与配置项。**唯一改动**：`iconBaseUrl` 一行改为指向本仓库图标目录 |
+| `Config/mihomoConfig.yaml`、`Config/mihomoConfigLite.yaml` | 成品配置的全部内容。**唯一改动**：各策略组 `icon` 字段改为指向本仓库图标目录 |
+| `Rules/` | 随仓库分发的规则文件 |
+| `Test/` | 脚本测试套件 |
+| `.github/workflows/`、`.prettierrc.json`、`AGENT.md` | 自动化流程与工程配置 |
+
+### 原作者署名与说明的保留情况
+
+原作者的署名和说明一律原样保留，未作删改：
+
+- 两个脚本头部的「作者：AIsouler / 源仓库」注释，两份配置头部的「作者 / 原仓库」注释；
+- `LICENSE` 中完整的版权声明；
+- 原项目 README 的全部文字说明与功能描述，未复制、未改写，请以 [AIsouler/MyClash](https://github.com/AIsouler/MyClash) 原文为准。
+
+### 本项目原创部分
+
+`Icons/svg/` 40 枚矢量图标、`Icons/png/` 40 枚位图、`Image/` 下的示意图，以及本文档的全部文字。
+
+## 特别鸣谢
+
+- 感谢原作者 **AIsouler** 创建并持续维护 [MyClash](https://github.com/AIsouler/MyClash)（截至同步基线累计 483 次提交）。本仓库的脚本逻辑、分流方案与配置体系全部来自其工作成果，这里只是换了图标外观。
+- 感谢原项目贡献者 **Mugzx**、**litesme**、**Whisht**、**LancelotRar**，以及所有提交 issue、PR 与使用反馈的同学。
+- 感谢原项目致谢过的上游项目：[dahaha-365/YaNet](https://github.com/dahaha-365/YaNet)、[YiXuanZX/rules](https://github.com/YiXuanZX/rules)、[appshubcc/bett-rules](https://github.com/appshubcc/bett-rules)、[Koolson/Qure](https://github.com/Koolson/Qure)、[jsdmirror/JSDMirror](https://github.com/jsdmirror/JSDMirror)。
+- 感谢 [MetaCubeX/mihomo](https://github.com/MetaCubeX/mihomo) 提供内核，[appshubcc/Bettbox](https://github.com/appshubcc/Bettbox) 提供图形化管理客户端。
+
+## 特别说明
+
+1. **用途限定**：本项目仅供个人学习与网络配置管理技术研究使用，不得用于商业用途，不得用于违反所在地法律法规的场景，使用后果由使用者自行承担。
+2. **不含订阅与节点**：本仓库只包含脚本、配置与图标，不提供、不存储、不分发任何订阅链接、节点信息或账号凭证。
+3. **非官方分支**：本项目由第三方维护，与原项目作者无关，不代表原作者的立场或背书；上游更新不会自动同步到本仓库。
+4. **侵权处理**：图标为本项目自绘，其余内容的著作权归原作者及相应权利人所有。若权利人认为本仓库内容侵犯其合法权益，请通过 [Issues](https://github.com/JokerXiaoMo/taobai-zanhua/issues) 联系说明，经核实后将立即删除相关内容或下线本仓库。
+5. **无担保**：本项目按「现状」提供，不附带任何明示或暗示的担保。
 
 ## 免责声明
 
