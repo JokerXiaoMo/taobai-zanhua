@@ -272,7 +272,7 @@ https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/Script.j
 
 - 感谢原作者 **AIsouler** 创建并持续维护 [MyClash](https://github.com/AIsouler/MyClash)（截至同步基线累计 483 次提交）。本仓库的脚本逻辑、分流方案与配置体系全部来自其工作成果，这里只是换了图标外观。
 - 感谢原项目贡献者 **Mugzx**、**litesme**、**Whisht**、**LancelotRar**，以及所有提交 issue、PR 与使用反馈的同学。
-- 感谢原项目致谢过的上游项目：[dahaha-365/YaNet](https://github.com/dahaha-365/YaNet)、[YiXuanZX/rules](https://github.com/YiXuanZX/rules)、[appshubcc/bett-rules](https://github.com/appshubcc/bett-rules)、[Koolson/Qure](https://github.com/Koolson/Qure)、[jsdmirror/JSDMirror](https://github.com/jsdmirror/JSDMirror)。
+- 感谢原项目致谢过的上游项目：[dahaha-365/YaNet](https://github.com/dahaha-365/YaNet)、[YiXuanZX/rules](https://github.com/YiXuanZX/rules)、[appshubcc/bett-rules](https://github.com/appshubcc/bett-rules)、[Koolson/Qure](https://github.com/Koolson/Qure)。
 - 感谢 [MetaCubeX/mihomo](https://github.com/MetaCubeX/mihomo) 提供内核，[appshubcc/Bettbox](https://github.com/appshubcc/Bettbox) 提供图形化管理客户端。
 
 ## 特别说明
