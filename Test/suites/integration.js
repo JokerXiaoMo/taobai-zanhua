@@ -242,6 +242,32 @@ function runIntegrationTests(h, api, fx, loadScript, scriptFile) {
       );
     }
   });
+  h.test('proxy-server-nameserver 不存在或为空时触发 hosts 改写', () => {
+    const find = (cfg) => api.main(cfg).proxies.find((x) => x.name === '🇭🇰 香港 01 | 中转');
+    // 缺失 / 空数组 / 空串（listen 仍在）→ 无订阅 DNS 可用，直接按 hosts 改写节点域名
+    for (const value of [undefined, [], '']) {
+      const cfg = fx.typicalSubscription();
+      if (value === undefined) delete cfg.dns['proxy-server-nameserver'];
+      else cfg.dns['proxy-server-nameserver'] = value;
+      h.assertEqual(
+        find(cfg).server,
+        '10.0.0.1',
+        `proxy-server-nameserver 为空（${String(value)}）时应触发 hosts 改写`,
+      );
+    }
+    // 字符串写法等价于单元素数组（归一化后同样参与条件判断与私有 DNS 提取）
+    const stringCfg = fx.typicalSubscription();
+    stringCfg.dns['proxy-server-nameserver'] = '198.18.0.1:53';
+    h.assertEqual(find(stringCfg).server, '10.0.0.1', 'proxy-server-nameserver 为字符串时应触发 hosts 改写');
+    // 触发后不再把空的 proxy-server-nameserver 写入节点域名 policy
+    const outCfg = fx.typicalSubscription();
+    outCfg.dns['proxy-server-nameserver'] = [];
+    const policy = api.main(outCfg).dns['proxy-server-nameserver-policy'] || {};
+    h.assert(
+      Object.values(policy).every((v) => (Array.isArray(v) ? v : [v]).every((d) => String(d).trim() !== '')),
+      '不应把空值写入节点域名 policy',
+    );
+  });
   h.test('新写法 proxy-server-nameserver 含 127.0.0.1 且 listen 含 0.0.0.0 时触发 hosts 改写', () => {
     const cfg = fx.typicalSubscription();
     // 新写法：listen 为 0.0.0.0:7874，proxy-server-nameserver 为 udp://127.0.0.1:7874，
@@ -354,6 +380,15 @@ function runIntegrationTests(h, api, fx, loadScript, scriptFile) {
       h.assert(groupByName(out['proxy-groups'], '香港'), '香港组仍应存在');
     }),
   );
+  h.test('生成地区自动选择组=true → 自动选择组排在地区组之后', () => {
+    const out = api.main(fx.minimalSubscription());
+    const names = out['proxy-groups'].map((g) => g.name);
+    const idx = names.indexOf('香港');
+    h.assert(idx >= 0, '应生成香港组');
+    h.assertEqual(names[idx + 1], '香港-自动选择', '自动选择组应紧跟其地区组之后');
+    h.assert(!names.slice(0, idx).includes('香港-自动选择'), '自动选择组不应排在地区组之前');
+    h.assert(groupByName(out['proxy-groups'], '香港').proxies.includes('香港-自动选择'), '地区组应包含自动选择组');
+  });
   h.test('隐藏地区手动选择组=true → 地区组 hidden', () =>
     withOptions(api, { 隐藏地区手动选择组: true }, () => {
       const out = api.main(fx.minimalSubscription());

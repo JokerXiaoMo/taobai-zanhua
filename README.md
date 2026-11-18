@@ -4,7 +4,7 @@
 
 # 桃白簪花
 
-面向 **mihomo（Clash Meta）内核**的配置整理方案：一份覆写脚本 + 两份成品配置，把机场订阅里的节点重新编排成结构清晰、开箱可用的策略组体系。
+面向 **mihomo（Clash Meta）** 与 **Concord** 两套内核的配置整理方案：四份覆写脚本 + 四份成品配置，把机场订阅里的节点重新编排成结构清晰、开箱可用的策略组体系。
 
 它的取舍只有两句话：
 
@@ -33,13 +33,29 @@
 
 ---
 
-## 三种用法
+## 内核适配
 
-| 用法 | 文件 | 适合谁 |
-| --- | --- | --- |
-| 成品配置 · 全量 | `Config/mihomoConfig.yaml` | 想直接导入就能用，不需要自动分组 |
-| 覆写脚本 · 全量 | `Script/mihomoScript.js` | 有自己的机场订阅，希望节点自动归类 |
-| 覆写脚本 · 精简 | `Script/Script.js` | 同上，但只保留常用分流，配置更短 |
+同一套分流思路按内核做成两份实现。先用客户端的「设置 → 关于」或「核心状态」确认跑的是哪个内核，再挑对应的一列——两套文件不要混用。
+
+| 内核 | 适用客户端 | 覆写脚本 | 成品配置 |
+| --- | --- | --- | --- |
+| mihomo | 绝大多数 mihomo 内核客户端 | `mihomoScript.js` / `Script.js` | `mihomoConfig.yaml` / `mihomoConfigLite.yaml` |
+| Concord | FlClash 新内核 | `concordScript.js` / `concordScriptLite.js` | `concordConfig.yaml` / `concordConfigLite.yaml` |
+
+Concord 是 [FlClash](https://github.com/chen08209/FlClash) 换用的新内核，以 Rust 重写、直接读取 mihomo 配置，但并非所有参数都会被读取——有些写法会让整份配置被拒绝。所以 concord 版单独维护，已经剔除了它不认的键。与 mihomo 的行为差异、导入步骤和配套设置，见 **[FlClash（Concord 内核）使用说明](Docs/FlClashConcord.md)**。
+
+---
+
+## 四种用法
+
+两个内核各有一套，用法一一对应，按你的内核挑一列即可。
+
+| 用法 | mihomo | Concord | 适合谁 |
+| --- | --- | --- | --- |
+| 成品配置 · 全量 | `Config/mihomoConfig.yaml` | `Config/concordConfig.yaml` | 想直接导入就能用，不需要自动分组 |
+| 成品配置 · 精简 | `Config/mihomoConfigLite.yaml` | `Config/concordConfigLite.yaml` | 同上，但只留常用分流，配置更短 |
+| 覆写脚本 · 全量 | `Script/mihomoScript.js` | `Script/concordScript.js` | 有自己的机场订阅，希望节点自动归类 |
+| 覆写脚本 · 精简 | `Script/Script.js` | `Script/concordScriptLite.js` | 同上，但只保留常用分流，配置更短 |
 
 两个版本的分组逻辑完全一致，差别只在分流组的数量：全量版 46 个策略组、22 个分流组；精简版 28 个策略组，分流组只保留 Google、AI、Telegram、Steam 与 AdBlock。
 
@@ -139,14 +155,20 @@ FCM · YouTube · Google · AI · GitHub · Microsoft · Apple · Telegram · St
 
 ![五步完成导入](Image/import-guide.svg)
 
-下面每条链接各占一行，每行右上角有独立的复制按钮，点一次只复制这一条，不会把两条一起粘进去。
+下面每条链接各占一行，每行右上角有独立的复制按钮，点一次只复制这一条，不会把两条一起粘进去。先按上面的「内核适配」确认内核，再取对应的一段。
 
-### 全量版（功能最全）
+### mihomo 内核
 
 **成品配置 · 全量**
 
 ```
 https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Config/mihomoConfig.yaml
+```
+
+**成品配置 · 精简**
+
+```
+https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Config/mihomoConfigLite.yaml
 ```
 
 **覆写脚本 · 全量**（配合你自己的机场订阅使用）
@@ -155,21 +177,39 @@ https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Config/mihomoCo
 https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/mihomoScript.js
 ```
 
-### 精简版（只留常用分流，配置更短）
-
-**成品配置 · 精简**
-
-```
-https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Config/mihomoConfigLite.yaml
-```
-
 **覆写脚本 · 精简**（配合你自己的机场订阅使用）
 
 ```
 https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/Script.js
 ```
 
-> 怎么选：成品配置直接导入即用；覆写脚本用于覆写你手上的机场订阅，请勿用它去覆写手写的配置。导入后记得关掉客户端的 DNS 覆写选项，否则 DNS 分流会被客户端接管，和配置里的设定打架。
+### Concord 内核（FlClash 新内核）
+
+**成品配置 · 全量**
+
+```
+https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Config/concordConfig.yaml
+```
+
+**成品配置 · 精简**
+
+```
+https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Config/concordConfigLite.yaml
+```
+
+**覆写脚本 · 全量**（扩展模式要切到「脚本模式」）
+
+```
+https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/concordScript.js
+```
+
+**覆写脚本 · 精简**（扩展模式要切到「脚本模式」）
+
+```
+https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/concordScriptLite.js
+```
+
+> 怎么选：成品配置直接导入即用；覆写脚本用于覆写你手上的机场订阅，请勿用它去覆写手写的配置。导入后记得关掉客户端的 DNS 覆写选项，否则 DNS 分流会被客户端接管，和配置里的设定打架。Concord 版还要求把「网络 → 覆写项」里的 DNS 与 TUN 覆写留空，细节见 [Concord 使用说明](Docs/FlClashConcord.md)。
 
 ---
 
@@ -205,17 +245,23 @@ https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/Script.j
 ```
 .
 ├── Config
-│   ├── mihomoConfig.yaml       全量版配置，46 个策略组
-│   └── mihomoConfigLite.yaml   精简版配置，28 个策略组
+│   ├── mihomoConfig.yaml           mihomo 全量版配置，46 个策略组
+│   ├── mihomoConfigLite.yaml       mihomo 精简版配置，28 个策略组
+│   ├── concordConfig.yaml          Concord 全量版配置，46 个策略组
+│   └── concordConfigLite.yaml      Concord 精简版配置，28 个策略组
 ├── Script
-│   ├── mihomoScript.js         全量版覆写脚本
-│   └── Script.js               精简版覆写脚本
+│   ├── mihomoScript.js             mihomo 全量版覆写脚本
+│   ├── Script.js                   mihomo 精简版覆写脚本
+│   ├── concordScript.js            Concord 全量版覆写脚本
+│   └── concordScriptLite.js        Concord 精简版覆写脚本
+├── Docs
+│   └── FlClashConcord.md           FlClash（Concord 内核）使用说明
 ├── Icons
-│   ├── svg                     40 枚矢量图标
-│   └── png                     144 × 144 位图，供旧客户端使用
-├── Rules                       少量随仓库分发的规则文件
-├── Image                       文档示意图（矢量，本项目自绘）
-├── Test                        脚本的测试用例
+│   ├── svg                         40 枚矢量图标
+│   └── png                         144 × 144 位图，供旧客户端使用
+├── Rules                           少量随仓库分发的规则文件
+├── Image                           文档示意图（矢量，本项目自绘）
+├── Test                            脚本的测试用例
 └── LICENSE
 ```
 
@@ -235,6 +281,9 @@ https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/Script.j
 **为什么强调关掉 DNS 覆写？**
 本方案把 `nameserver-policy`、`direct-nameserver`、`fake-ip-filter` 都写进了配置，客户端再用自己的 DNS 覆写会盖掉这些设定，导致国内域名被送出国、国外域名被直连。
 
+**FlClash 导入后报配置错误或部分功能不生效？**
+新版 FlClash 已换成 Concord 内核，它不读取 mihomo 的一部分参数，混用会直接报错。先确认内核，再换用 `concordConfig*.yaml` / `concordScript*.js` 那一套，两套文件不要混用。
+
 ---
 
 ## 来源与授权
@@ -246,15 +295,18 @@ https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/Script.j
 
 ### 哪些内容取自原作者
 
-同步基线为上游提交 [`b0ea9e4`](https://github.com/AIsouler/MyClash/commit/b0ea9e41ec6700a7ac4c4e1cb7b7ed0c2b9a1c1a)（2026-11-05）。除图标外，下列内容全部来自原作者：
+同步基线为上游提交 [`858e336`](https://github.com/AIsouler/MyClash/commit/858e336f91ef5bdea9df9fe8d80d69e172b49364)（2026-11-18）。除图标外，下列内容全部来自原作者：
 
 | 路径 | 说明 |
 | --- | --- |
 | `Script/mihomoScript.js`、`Script/Script.js` | 覆写脚本的全部逻辑、注释与配置项。**唯一改动**：`iconBaseUrl` 一行改为指向本仓库图标目录 |
+| `Script/concordScript.js`、`Script/concordScriptLite.js` | Concord（FlClash 新内核）版覆写脚本。**唯一改动**：同上 |
 | `Config/mihomoConfig.yaml`、`Config/mihomoConfigLite.yaml` | 成品配置的全部内容。**唯一改动**：各策略组 `icon` 字段改为指向本仓库图标目录 |
+| `Config/concordConfig.yaml`、`Config/concordConfigLite.yaml` | Concord 版成品配置。**唯一改动**：同上 |
+| `Docs/FlClashConcord.md` | FlClash（Concord 内核）使用说明。**唯一改动**：文内链接改为指向本仓库 |
 | `Rules/` | 随仓库分发的规则文件 |
 | `Test/` | 脚本测试套件 |
-| `.github/workflows/`、`.prettierrc.json`、`AGENT.md` | 自动化流程与工程配置 |
+| `.github/workflows/`、`.prettierrc.json` | 自动化流程与工程配置 |
 
 ### 原作者署名与说明的保留情况
 
@@ -270,10 +322,10 @@ https://raw.githubusercontent.com/JokerXiaoMo/taobai-zanhua/main/Script/Script.j
 
 ## 特别鸣谢
 
-- 感谢原作者 **AIsouler** 创建并持续维护 [MyClash](https://github.com/AIsouler/MyClash)（截至同步基线累计 483 次提交）。本仓库的脚本逻辑、分流方案与配置体系全部来自其工作成果，这里只是换了图标外观。
+- 感谢原作者 **AIsouler** 创建并持续维护 [MyClash](https://github.com/AIsouler/MyClash)（截至同步基线累计 495 次提交）。本仓库的脚本逻辑、分流方案与配置体系全部来自其工作成果，这里只是换了图标外观。
 - 感谢原项目贡献者 **Mugzx**、**litesme**、**Whisht**、**LancelotRar**，以及所有提交 issue、PR 与使用反馈的同学。
 - 感谢原项目致谢过的上游项目：[dahaha-365/YaNet](https://github.com/dahaha-365/YaNet)、[YiXuanZX/rules](https://github.com/YiXuanZX/rules)、[appshubcc/bett-rules](https://github.com/appshubcc/bett-rules)、[Koolson/Qure](https://github.com/Koolson/Qure)。
-- 感谢 [MetaCubeX/mihomo](https://github.com/MetaCubeX/mihomo) 提供内核，[appshubcc/Bettbox](https://github.com/appshubcc/Bettbox) 提供图形化管理客户端。
+- 感谢 [MetaCubeX/mihomo](https://github.com/MetaCubeX/mihomo) 提供内核，[chen08209/concord](https://github.com/chen08209/concord) 提供 Concord 内核，[appshubcc/Bettbox](https://github.com/appshubcc/Bettbox) 提供图形化管理客户端。
 
 ## 特别说明
 

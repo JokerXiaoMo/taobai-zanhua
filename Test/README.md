@@ -12,13 +12,13 @@ node Test/run-tests.js
 npm --prefix Test test
 ```
 
-仅需要 Node.js（推荐 ≥ 16）。
+仅需要 Node.js（espree 11 要求 ^20.19 / ^22.13 / ≥24）。
 
 可按需只运行某一部分（参数可组合）：
 
 ```bash
 node Test/run-tests.js --node     # 仅 Node 单元+集成测试
-node Test/run-tests.js --es2020   # 仅 ES2020 兼容性检查
+node Test/run-tests.js --es2026   # 仅 ES2026 兼容性检查
 node Test/run-tests.js --quickjs  # 仅 QuickJS 引擎验证
 ```
 
@@ -30,8 +30,8 @@ node Test/run-tests.js --quickjs  # 仅 QuickJS 引擎验证
 npm --prefix Test install
 ```
 
-- **ES2020 兼容性检查**：用 `espree` 以 `ecmaVersion: 2020` 解析脚本（任何 ES2021+ 语法都会报错），并静态扫描是否使用了 ES2021+ 的内置 API。
-  单独运行：`npm --prefix Test run test:es2020`（等价于 `node Test/run-tests.js --es2020`）
+- **ES2026 兼容性检查**：用 `espree` 以 `ecmaVersion: 2026` 解析脚本（任何 ES2027+ 语法都会报错），并静态扫描是否使用了 ES2027+ 的内置 API。
+  单独运行：`npm --prefix Test run test:es2026`（等价于 `node Test/run-tests.js --es2026`）
 - **QuickJS 引擎验证**：用真实 QuickJS 引擎加载脚本并调用 `main()`。
   单独运行：`npm --prefix Test run test:quickjs`（等价于 `node Test/run-tests.js --quickjs`）
 
@@ -56,7 +56,9 @@ npm --prefix Test install
 - 节点过滤（DIRECT/REJECT/rematch/信息节点）、标准化补国旗、dialer-proxy 修复
 - 节点名含零宽字符（`invisibleCharsSubscription`）：地区识别、信息节点过滤、倍率判断均不受影响；且节点名**不被改写**（不可见字符原样保留，只额外补国旗），dialer-proxy 引用照常同步
 - GLOBAL 策略组聚合所有策略组
-- DNS 与 hosts（`default-nameserver` 与 `proxy-server-nameserver` 分别使用固定公共 DNS；私有 DNS 在无节点专属 policy 时合并写入节点域名 policy、有专属 policy 时优先保留、公共 DNS 过滤；节点域名 policy/fake-ip-filter 保留（节点域名仅取映射后的 server 且排除 IP 类型）、包含 `doh.pub` 在内的默认 hosts 映射，以及 hosts 映射改写 server；仅当 `proxy-server-nameserver` 有且仅有一个条目且包含 `listen` 值，或条目含 `127.0.0.1` 且 `listen` 含 `0.0.0.0` 时才触发改写，未命中时跳过改写）
+- DNS 与 hosts（`default-nameserver` 与 `proxy-server-nameserver` 分别使用固定公共 DNS；私有 DNS 在无节点专属 policy 时合并写入节点域名 policy、有专属 policy 时优先保留、公共 DNS 过滤；节点域名 policy/fake-ip-filter 保留（节点域名仅取映射后的 server 且排除 IP 类型）、包含 `doh.pub` 在内的默认 hosts 映射，以及 hosts 映射改写 server）
+  - 改写触发：只要 `proxy-server-nameserver` 不存在或为空即**无条件触发改写**，或有且仅有一个条目且包含 `listen` 值，或条目含 `127.0.0.1` 且 `listen` 含 `0.0.0.0` 时也触发改写，未命中时跳过改写；该字段的字符串 / 数组写法等价，缺失、空串、空白串、只含空值的数组统一按「为空」处理
+  - 节点域名 policy/fake-ip-filter 一律按改写后的 server 匹配：改写为 IP 的域名不保留；改写后原域名的策略本就不生效，不做「原域名 → 目标域名」的迁移
 - 配置选项开关（过滤高倍率 / 自动选择组 / 隐藏手动组 / 生成高低倍率组 / 生成家宽节点组 / 分流组添加所有节点 / QUIC 屏蔽 / 关闭分流组）
 - 家宽节点：生成“家宽节点”组（含 Home 图标），地区家宽节点同时归地区组，无地区关键词的家宽节点入“其他节点”组；`生成家宽节点组=false` 时不再生成该组，节点仍按地区 / 其他节点归类
 - 自定义节点：未配置时不生成自定义节点组；配置后生成自定义节点组（链式代理启用时名“链式落地”，否则“自建节点”）、重名加“自建-”前缀、不参与 hosts 改写与 DNS 域名处理、默认代理/GLOBAL/手动选择包含自定义节点
@@ -67,8 +69,8 @@ npm --prefix Test install
 
 ```text
 Test/
-├── package.json            # npm test / test:es2020 / test:quickjs 脚本
-├── run-tests.js            # 唯一入口：Node 测试 + ES2020 检查 + QuickJS 验证（支持 --node/--es2020/--quickjs 筛选）
+├── package.json            # npm test / test:es2026 / test:quickjs 脚本
+├── run-tests.js            # 唯一入口：Node 测试 + ES2026 检查 + QuickJS 验证（支持 --node/--es2026/--quickjs 筛选）
 ├── README.md
 ├── lib/
 │   ├── loader.js           # vm 沙箱加载脚本并暴露 main / 内部函数 / ruleOptionsEnable
@@ -76,7 +78,7 @@ Test/
 │   ├── options.js          # ruleOptionsEnable 临时覆写与恢复（单元/集成共用）
 │   ├── fixtures.js         # 模拟订阅配置（典型/精简/空/仅type过滤/全部可过滤/hosts映射/通配映射/链式映射/零宽字符）
 │   ├── scripts.js          # 待测试脚本列表（单一来源，供 run-tests / 两个检查模块共用）
-│   ├── es2020-check.js     # ES2020 兼容性检查逻辑（espree 语法 + 内置 API 静态扫描）
+│   ├── es2026-check.js     # ES2026 兼容性检查逻辑（espree 语法 + 内置 API 静态扫描）
 │   └── quickjs-check.js    # QuickJS 兼容性验证逻辑（语法解析/顶层执行/main 调用）
 └── suites/
     ├── unit.js             # 纯函数单元测试
