@@ -39,10 +39,14 @@
 
 | 内核 | 适用客户端 | 覆写脚本 | 成品配置 |
 | --- | --- | --- | --- |
-| mihomo | 绝大多数 mihomo 内核客户端 | `mihomoScript.js` / `Script.js` | `mihomoConfig.yaml` / `mihomoConfigLite.yaml` |
-| Concord | FlClash 新内核 | `concordScript.js` / `concordScriptLite.js` | `concordConfig.yaml` / `concordConfigLite.yaml` |
+| mihomo | 绝大多数 mihomo 内核客户端 | [`mihomoScript.js`](Script/mihomoScript.js) / [`Script.js`](Script/Script.js) | [`mihomoConfig.yaml`](Config/mihomoConfig.yaml) / [`mihomoConfigLite.yaml`](Config/mihomoConfigLite.yaml) |
+| Concord | FlClash 新内核 | [`concordScript.js`](Script/concordScript.js) / [`concordScriptLite.js`](Script/concordScriptLite.js) | [`concordConfig.yaml`](Config/concordConfig.yaml) / [`concordConfigLite.yaml`](Config/concordConfigLite.yaml) |
 
-Concord 是 [FlClash](https://github.com/chen08209/FlClash) 换用的新内核，以 Rust 重写、直接读取 mihomo 配置，但并非所有参数都会被读取——有些写法会让整份配置被拒绝。所以 concord 版单独维护，已经剔除了它不认的键。与 mihomo 的行为差异、导入步骤和配套设置，见 **[FlClash（Concord 内核）使用说明](Docs/FlClashConcord.md)**。
+Concord 是 [FlClash](https://github.com/chen08209/FlClash) 换用的新内核，以 Rust 重写、直接读取 mihomo 配置，但并非所有参数都会被读取——有些写法会让整份配置被拒绝。所以 concord 版单独维护，已经剔除了它不认的键。
+
+> 上表是文件位置，**不是订阅链接**。要导入到客户端，请取下方「[导入](#导入)」里对应内核那一段的四条链接。
+
+与 mihomo 的行为差异、导入步骤和配套设置，见 **[FlClash（Concord 内核）使用说明](Docs/FlClashConcord.md)**。
 
 ---
 
